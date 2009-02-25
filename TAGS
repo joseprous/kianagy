@@ -1,0 +1,961 @@
+
+common/map.h,321
+#define MAP_H2,14
+struct texture{texture5,49
+struct points{points9,82
+struct rawbrush{rawbrush13,122
+struct poly{poly19,204
+struct brush{brush26,301
+struct brushlist{brushlist31,352
+struct headerlist{headerlist38,479
+struct entity{entity43,547
+struct entitylist{entitylist48,622
+struct map{map53,692
+
+common/mymath.c,576
+double vectorlen(5,58
+struct vector normalize(9,120
+struct vector cross(13,203
+double dot(21,379
+struct vector sumvectors(25,468
+struct vector difvectors(33,620
+struct vector mulvector(41,772
+int inter2planes(50,904
+struct plane planepnormal(77,1692
+struct plane plane3points(87,1894
+int interlineplane(95,2078
+int pointinplane(109,2472
+struct line line2points(125,2735
+int pointinline(132,2873
+double distpointlineseg(148,3211
+struct vector segmidpoint(153,3382
+int comppoints(164,3590
+struct vector mulvecmatrix(170,3773
+struct vector rotatevecz(179,4053
+
+common/mymath.h,204
+#define MYMATH_H2,17
+#define PI 3,34
+struct matrix{matrix4,68
+struct vector{vector8,107
+struct vector2d{vector2d12,141
+struct rect{rect16,176
+struct line{line20,221
+struct plane{plane25,295
+
+common/collisionsys.c,764
+struct Cell ***CreateMatrix(CreateMatrix7,103
+void DestroyMatrix(25,470
+void ShowMatrix(39,673
+struct WorldObject *CreateWorldObject(CreateWorldObject57,980
+void DestroyWorldObject(70,1330
+void ObjectToFile(76,1448
+struct WorldObject *ObjectFromFile(ObjectFromFile94,1970
+int Max3ui(126,2668
+void MatrixToObject(133,2761
+int LastVertex(148,3044
+int FirstVertex(156,3245
+void DrawTilVertex(163,3401
+void DrawVolume(168,3535
+struct Coordinate UnitVectorUI(186,3909
+struct Coordinate ApplyVector(206,4391
+struct Coordinate PosToCoor(217,4612
+int EqualsCoor(228,4769
+void PolyToGrid(234,4949
+void BrushToGrid(275,6388
+int InMatrix(296,6803
+float GetGround(303,7068
+float GetHeight(321,7414
+int BlockAvailable(339,7776
+int Collision(361,8285
+
+common/map.c,117
+unsigned int comb(19,276
+void printvector(31,456
+int pointinpoly(36,534
+struct brush *loadbrush(loadbrush45,686
+
+common/collisionsys.h,451
+#define FREE 1,0
+#define USED 2,15
+#define SOLID 4,31
+#define LIQUID 5,47
+#define OUTOFMAP 7,65
+#define TRUE 8,84
+#define FALSE 9,99
+#define SPECIAL 10,115
+#define POLY_MAX_VERTEX 12,135
+#define GROUND 14,164
+#define SCALE_X 16,182
+#define SCALE_Y 17,201
+#define SCALE_Z 18,220
+#define PLAYER_SIZE_X 20,240
+#define PLAYER_SIZE_Y 21,265
+#define PLAYER_SIZE_Z 22,290
+struct Cell24,316
+struct Coordinate30,381
+struct WorldObject37,429
+
+common/protocol.h,530
+#define BROADCAST_HEADER 1,0
+#define MESSAGE_HEADER 2,27
+#define CONTROL_HEADER 3,52
+#define MESSAGE_SIZE 5,78
+#define NAME_SIZE 6,102
+#define STAND 8,124
+#define LMOVE 9,140
+#define BMOVE 10,156
+#define RMOVE 11,172
+#define MOVE 12,188
+#define JUMP 13,203
+#define FLY 14,218
+#define UP 15,232
+#define DOWN 16,245
+#define NOFLY 17,260
+#define ATTACK 18,277
+#define MESSAGE 20,296
+#define SETNAME 21,315
+#define EXIT 22,334
+struct broadcast24,351
+struct chat43,729
+struct control50,832
+struct feedback57,934
+
+converter/convert.c,147
+struct Coordinate size,6,103
+struct Coordinate size,start;6,103
+struct WorldObject *object;object7,133
+void CreateGrid(9,162
+int main(29,508
+
+client/players.c,214
+int n 8,121
+float interp 9,133
+struct player_model models[models13,206
+struct md2_model_t weapons[weapons14,237
+int load_weapons(16,270
+int load_models(32,1351
+void drawplayer(77,2806
+int drawpj(114,3793
+
+client/events.c,125
+int fly;12,235
+void salir(16,281
+int otherkeys(23,346
+SDL_Event event;62,869
+int mover=63,886
+int handle_events(65,900
+
+client/font.c,70
+GLuint  base;22,480
+GLvoid buildFont(24,573
+GLvoid glPrint(63,1584
+
+client/anorms.h,4894
+{ -0.525731f,f5,38
+{ -0.525731f,  0.000000f,f5,38
+{ -0.295242f,f7,122
+{ -0.295242f,  0.000000f,f7,122
+{ -0.162460f,f9,206
+{ -0.162460f,  0.262866f,f9,206
+{  0.000000f,f11,290
+{  0.000000f,  0.850651f,f11,290
+{  0.147621f,f13,374
+{  0.147621f,  0.716567f,f13,374
+{  0.309017f,f15,458
+{  0.309017f,  0.500000f,f15,458
+{  0.295242f,f17,542
+{  0.295242f,  0.000000f,f17,542
+{  0.162460f,f19,626
+{  0.162460f,  0.262866f,f19,626
+{ -0.809017f,f21,710
+{ -0.809017f,  0.309017f,f21,710
+{ -0.850651f,f23,794
+{ -0.850651f,  0.525731f,f23,794
+{ -0.716567f,f25,878
+{ -0.716567f,  0.681718f,f25,878
+{ -0.500000f,f27,962
+{ -0.500000f,  0.809017f,f27,962
+{ -0.425325f,f29,1046
+{ -0.425325f,  0.688191f,f29,1046
+{ -0.500000f,f31,1130
+{ -0.500000f,  0.809017f,f31,1130
+{  0.000000f,f33,1214
+{  0.000000f,  0.850651f,f33,1214
+{  0.000000f,f35,1298
+{  0.000000f,  0.955423f,f35,1298
+{  0.000000f,f37,1382
+{  0.000000f,  1.000000f,f37,1382
+{ -0.262866f,f39,1466
+{ -0.262866f,  0.951056f,f39,1466
+{  0.262866f,f41,1550
+{  0.262866f,  0.951056f,f41,1550
+{  0.238856f,f43,1634
+{  0.238856f,  0.864188f,f43,1634
+{  0.500000f,f45,1718
+{  0.500000f,  0.809017f,f45,1718
+{  0.716567f,f47,1802
+{  0.716567f,  0.681718f,f47,1802
+{  0.525731f,f49,1886
+{  0.525731f,  0.850651f,f49,1886
+{  0.864188f,f51,1970
+{  0.864188f,  0.442863f,f51,1970
+{  0.809017f,f53,2054
+{  0.809017f,  0.309017f,f53,2054
+{  0.587785f,f55,2138
+{  0.587785f,  0.425325f,f55,2138
+{  1.000000f,f57,2222
+{  1.000000f,  0.000000f,f57,2222
+{  0.850651f,f59,2306
+{  0.850651f, -0.525731f,f59,2306
+{  0.864188f,f61,2390
+{  0.864188f, -0.442863f,f61,2390
+{  0.809017f,f63,2474
+{  0.809017f, -0.309017f,f63,2474
+{  0.850651f,f65,2558
+{  0.850651f,  0.000000f,f65,2558
+{  0.809017f,f67,2642
+{  0.809017f,  0.309017f,f67,2642
+{  0.525731f,f69,2726
+{  0.525731f,  0.000000f,f69,2726
+{  0.681718f,f71,2810
+{  0.681718f, -0.147621f,f71,2810
+{  0.809017f,f73,2894
+{  0.809017f, -0.309017f,f73,2894
+{  0.951056f,f75,2978
+{  0.951056f, -0.162460f,f75,2978
+{  0.309017f,f77,3062
+{  0.309017f,  0.500000f,f77,3062
+{  0.442863f,f79,3146
+{  0.442863f,  0.238856f,f79,3146
+{  0.688191f,f81,3230
+{  0.688191f,  0.587785f,f81,3230
+{ -0.309017f,f83,3314
+{ -0.309017f,  0.500000f,f83,3314
+{ -0.525731f,f85,3398
+{ -0.525731f,  0.000000f,f85,3398
+{ -0.295242f,f87,3482
+{ -0.295242f,  0.000000f,f87,3482
+{  0.000000f,f89,3566
+{  0.000000f,  0.000000f,f89,3566
+{  0.162460f,f91,3650
+{  0.162460f,  0.262866f,f91,3650
+{ -0.309017f,f93,3734
+{ -0.309017f, -0.500000f,f93,3734
+{  0.000000f,f95,3818
+{  0.000000f, -0.850651f,f95,3818
+{  0.147621f,f97,3902
+{  0.147621f, -0.716567f,f97,3902
+{  0.309017f,f99,3986
+{  0.309017f, -0.500000f,f99,3986
+{  0.162460f,f101,4070
+{  0.162460f, -0.262866f,f101,4070
+{  0.500000f,f103,4154
+{  0.500000f, -0.809017f,f103,4154
+{  0.716567f,f105,4238
+{  0.716567f, -0.681718f,f105,4238
+{  0.587785f,f107,4322
+{  0.587785f, -0.425325f,f107,4322
+{  0.000000f,f109,4406
+{  0.000000f, -1.000000f,f109,4406
+{  0.000000f,f111,4490
+{  0.000000f, -0.850651f,f111,4490
+{  0.238856f,f113,4574
+{  0.238856f, -0.864188f,f113,4574
+{  0.500000f,f115,4658
+{  0.500000f, -0.809017f,f115,4658
+{  0.525731f,f117,4742
+{  0.525731f, -0.850651f,f117,4742
+{ -0.500000f,f119,4826
+{ -0.500000f, -0.809017f,f119,4826
+{ -0.850651f,f121,4910
+{ -0.850651f, -0.525731f,f121,4910
+{ -0.716567f,f123,4994
+{ -0.716567f, -0.681718f,f123,4994
+{ -0.500000f,f125,5078
+{ -0.500000f, -0.809017f,f125,5078
+{ -0.262866f,f127,5162
+{ -0.262866f, -0.951056f,f127,5162
+{ -0.809017f,f129,5246
+{ -0.809017f, -0.309017f,f129,5246
+{ -0.681718f,f131,5330
+{ -0.681718f, -0.147621f,f131,5330
+{ -0.587785f,f133,5414
+{ -0.587785f, -0.425325f,f133,5414
+{ -0.147621f,f135,5498
+{ -0.147621f, -0.716567f,f135,5498
+{ -0.162460f,f137,5582
+{ -0.162460f, -0.262866f,f137,5582
+{  0.162460f,f139,5666
+{  0.162460f, -0.262866f,f139,5666
+{  0.147621f,f141,5750
+{  0.147621f, -0.716567f,f141,5750
+{  0.425325f,f143,5834
+{  0.425325f, -0.688191f,f143,5834
+{  0.688191f,f145,5918
+{  0.688191f, -0.587785f,f145,5918
+{ -0.951056f,f147,6002
+{ -0.951056f,  0.162460f,f147,6002
+{ -0.850651f,f149,6086
+{ -0.850651f,  0.000000f,f149,6086
+{ -0.951056f,f151,6170
+{ -0.951056f, -0.162460f,f151,6170
+{ -0.951056f,f153,6254
+{ -0.951056f,  0.162460f,f153,6254
+{ -0.864188f,f155,6338
+{ -0.864188f, -0.442863f,f155,6338
+{ -0.809017f,f157,6422
+{ -0.809017f, -0.309017f,f157,6422
+{ -0.681718f,f159,6506
+{ -0.681718f, -0.147621f,f159,6506
+{ -0.688191f,f161,6590
+{ -0.688191f,  0.587785f,f161,6590
+{ -0.425325f,f163,6674
+{ -0.425325f,  0.688191f,f163,6674
+{ -0.587785f,f165,6758
+{ -0.587785f, -0.425325f,f165,6758
+
+client/network.h,63
+#define BREATH 3,2
+#define MAXBUFLEN 4,20
+#define PORT 6,43
+
+client/players.h,91
+struct player{player2,17
+#define NMOVES 21,279
+struct player_model{player_model23,299
+
+client/octree.c,607
+struct aabb getaabb(5,60
+struct aabb getmaxbox(19,359
+int pointinaabb(51,1032
+int brushinaabb(59,1230
+struct brushlist *getbrushes(getbrushes71,1457
+int checkaabb(97,1913
+struct loctree *_loadloctree(_loadloctree106,2067
+struct loctree *loadloctree(loadloctree199,4135
+void _loctreestats(204,4260
+void loctreestats(222,4568
+struct vector getpvertex(227,4632
+struct vector getnvertex(231,4694
+int interaabbplane(240,4829
+int interrectline(255,5155
+struct rect getbbox(260,5208
+int interrectrect(265,5251
+int interrectpoly(274,5396
+int interaabbaabb(288,5782
+int interaabbbrush(296,6056
+
+client/md2.c,286
+vec3_t anorms_table[anorms_table15,241
+int ReadMD2Model 30,558
+void FreeModel 106,2889
+typedef struct tagMATRIX	327,9051
+MATRIX;331,9218
+void renderflat(440,12823
+void renderwire(537,15606
+void RenderFrameItpWithGLCmds 612,17858
+void Animate 642,18625
+void cleanup 658,18903
+
+client/drawmap.c,395
+#define WIREFRAME 4,61
+#define SOLID 5,81
+#define FLAT 6,97
+struct texlist{texlist11,219
+float TmpShade;19,324
+struct vector TmpVector,20,341
+struct vector TmpVector, TmpNormal;20,341
+GLuint loadtex(23,415
+void drawpoly(102,2696
+void drawbrush(214,5550
+void drawmap(223,5743
+void _drawmap(255,6365
+void __drawloctree(272,6737
+void _drawloctree(287,6983
+void drawloctree(310,7448
+
+client/md2.h,247
+typedef float vec3_t[vec3_t2,13
+struct md2_header_t3,38
+struct md2_skin_t28,385
+struct md2_texCoord_t34,447
+struct md2_triangle_t41,517
+struct md2_vertex_t48,621
+struct md2_frame_t55,716
+struct md2_glcmd_t64,848
+struct md2_model_t70,907
+
+client/client.h,422
+#define MESSAGE_MAX_LENGTH 14,276
+#define NAME_MAX_LENGTH 15,307
+#define TXT_MAXTIME 16,334
+#define LMOVE 20,363
+#define BMOVE 21,380
+#define RMOVE 22,398
+#define MOVE 23,416
+#define STAND 24,433
+#define EXIT 25,449
+#define JUMP 26,464
+#define FLY 27,479
+#define UP 28,493
+#define DOWN 29,507
+#define NOFLY 30,523
+#define ATTACK 31,540
+#define BREATH 33,559
+#define MESSAGE 35,578
+#define SETNAME 36,596
+
+client/octree.h,76
+#define OCTREE_H2,17
+struct aabb{aabb6,90
+struct loctree{loctree11,147
+
+client/network.c,255
+Uint32 lastmsg;11,201
+int sockfd;12,217
+void send_msg(22,444
+void send_msg2(34,725
+void send_txt(46,1025
+void send_name(54,1219
+int count(63,1431
+int buscar_player(68,1508
+int network(102,2179
+void ini_network(230,4985
+int end_network(271,6036
+
+client/client.c,1572
+float WIDTH=13,165
+float HEIGHT=14,184
+int numpl;16,205
+int fullscreen=17,216
+SDL_mutex *mutex;mutex18,234
+struct bullet20,253
+struct bullet bala;31,381
+typedef struct tagMATRIX 33,402
+MATRIX;37,548
+struct player *players;players39,557
+struct player *pj;pj41,582
+double curent_time 43,602
+double last_time 44,626
+float cam_x,48,651
+float cam_x,cam_z,48,651
+float cam_x,cam_z,cam_y,48,651
+float cam_x,cam_z,cam_y,cam_ang,48,651
+float cam_x,cam_z,cam_y,cam_ang,cam_dist;48,651
+float pj_ang;49,693
+char pj_txtbuf[pj_txtbuf50,707
+int escribiendo=51,748
+char myname[myname53,768
+char smap[smap54,800
+char stmap[stmap55,819
+char sserver[sserver56,839
+GLuint cube_list,60,887
+GLuint cube_list,redcube_list,60,887
+GLuint cube_list,redcube_list,bluecube_list,60,887
+GLuint cube_list,redcube_list,bluecube_list,piso_list,60,887
+GLuint cube_list,redcube_list,bluecube_list,piso_list,map_list,60,887
+GLuint cube_list,redcube_list,bluecube_list,piso_list,map_list,transport_list;60,887
+struct vector lightAngle;62,967
+GLuint	shaderTexture[shaderTexture63,993
+float shaderData[shaderData64,1019
+struct texlist{texlist68,1105
+struct texlist *textures=textures74,1176
+struct texlist *findtex(findtex76,1205
+GLuint loadtex2(91,1490
+void ini_celshade(171,3769
+void ini_fog(211,4920
+void init(223,5161
+void billboardCheatSphericalBegin(275,5974
+void billboardEnd(301,6462
+void createbullet(308,6560
+void drawbullet(332,6990
+void display(380,8127
+void rotcam(437,9314
+void init_sdl(448,9586
+void uso(467,10086
+int main(480,10427
+
+server/defines.h,1107
+#define ERROR 1,0
+#define TRUE 2,17
+#define FALSE 3,32
+#define BUFFSIZE 4,48
+#define S_PORT 5,70
+#define BACKLOG 6,90
+#define PI 7,109
+#define NAME_MAX_LENGTH 8,143
+#define STAND 10,171
+#define EXIT 11,187
+#define JUMP 12,202
+#define MESSAGE 13,217
+#define SETNAME 14,235
+#define FLY 15,253
+#define UP 16,267
+#define DOWN 17,280
+#define NOFLY 18,296
+#define LMOVE 20,314
+#define BMOVE 21,331
+#define RMOVE 22,349
+#define MOVE 23,367
+#define TICKS 25,385
+#define CHATTICKS 26,405
+#define BREATH 27,431
+#define SPEED 28,452
+#define FLYSPEED 29,470
+#define GROUND 30,492
+#define GRAVITY 31,509
+#define JUMPHEIGH 32,527
+#define IMPULSE 33,548
+#define MESSAGE_MAX_LENGTH 34,567
+#define FEEDBACK 36,599
+#define MESSAGES 37,618
+#define TRANSSPEED 39,638
+#define NODERADIUS 40,660
+#define MILLON 41,682
+#define MAX_ACTION_NODES 43,706
+#define PROB_SCALE 44,733
+#define ACTION_AREA 45,756
+#define CHAT_AREA 46,779
+#define MAX_KEYWORDS 47,801
+#define PATIENCE 48,824
+#define AGRO_TIME 49,849
+#define MAX_ATTACKS 51,877
+#define ATTACK 52,899
+#define START_VITALITY 53,917
+
+server/npcsys.h,632
+struct ActionNode2,1
+struct Keyword12,162
+struct Npc18,234
+struct ActionNode *CreateActionNode(CreateActionNode31,476
+struct ActionNode *GoActionEdge(GoActionEdge48,891
+void DestroyActionNode(59,1124
+struct Keyword *CreateKeyword(CreateKeyword64,1190
+void DestroyKeyword(92,1568
+struct Npc *CreateNpc(CreateNpc97,1628
+void DestroyNpc(115,2098
+struct Npc *LoadNpcFromFile(LoadNpcFromFile124,2323
+void ShowNpcs(197,4389
+void RegisterNpcs(224,5122
+void UnRegisterNpcs(236,5318
+int NpcGetResponse(249,5500
+void NpcDoChat(262,5830
+void NpcFollowThis(274,6129
+void NpcGotAttacked(281,6323
+void NpcHandler(287,6449
+
+server/combatsys.h,209
+struct Attack2,1
+struct Attack *CreateAttack(CreateAttack13,117
+void DestroyAttack(30,456
+void LoadAttacksFromFile(35,514
+void DestroyAttacksList(50,1050
+void ShowAttacks(59,1170
+void DoAttack(68,1425
+
+server/server.h,599
+struct client2,1
+struct position9,82
+struct player16,134
+struct node36,482
+struct pathnode45,589
+struct transporter52,671
+struct node root;65,897
+pthread_mutex_t mutex 66,915
+int s_socket,67,966
+int s_socket,yes,67,966
+int s_socket,yes, sin_size;67,966
+pthread_t fb_thread,68,994
+pthread_t fb_thread,server_thread;68,994
+struct sockaddr_in s_address;69,1029
+struct client *newclient;newclient70,1059
+pthread_attr_t tattr;71,1085
+struct transporter *bus;bus72,1107
+struct WorldObject *map;map73,1132
+struct Npc *npc_root;npc_root74,1157
+struct Attack *attacks[attacks75,1179
+
+server/server.c,968
+struct player *CreatePlayer(CreatePlayer24,448
+void DestroyPlayer(50,1048
+struct transporter *CreateTransporter(CreateTransporter55,1106
+void LoadTransporters(73,1682
+struct pathnode *CreatePathNode(CreatePathNode123,2954
+void DestroyPathNodes(135,3221
+void DestroyTransporters(148,3400
+float Distance2p(162,3644
+int InRange(173,3850
+struct position UnitVector(179,4000
+int InObject(197,4373
+struct position MapToObject(205,4757
+struct position ObjectToMap(216,4953
+void InTransport(227,5150
+void OutTransport(250,5831
+struct transporter *GetTransport(GetTransport258,6027
+struct position TransportPos(270,6201
+struct node *Register(Register280,6374
+void UnRegister(295,6724
+void ShowRegister(303,6925
+void Broadcast(317,7151
+void GetMessage(336,7466
+void ClientHandler(357,7944
+int EqualsPos(419,9275
+int PosModified(427,9510
+void RealmHandler(449,10072
+void ShutdownHandler(685,17150
+void ServerHandler(719,17963
+int main(738,18494
+
+common/y.tab.h,287
+# define YYTOKENTYPE38,1653
+   enum yytokentype 41,1777
+     NUMBER 42,1799
+     TNULL 43,1818
+     FNUMBER 44,1836
+     STRINGL 45,1856
+     TEXTURE 46,1876
+#define NUMBER 50,1923
+#define TNULL 51,1942
+#define FNUMBER 52,1960
+#define STRINGL 53,1980
+#define TEXTURE 54,2000
+
+map_parser.y,26
+typedef union YYSTYPE60,
+
+y.tab.h,103
+	YYSTYPE;76,
+# define yystype 77,
+# define YYSTYPE_IS_DECLARED 78,
+# define YYSTYPE_IS_TRIVIAL 79,
+
+lex.yy.c,4784
+#define  YY_INT_ALIGNED 4,
+#define FLEX_SCANNER8,
+#define YY_FLEX_MAJOR_VERSION 9,
+#define YY_FLEX_MINOR_VERSION 10,
+#define YY_FLEX_SUBMINOR_VERSION 11,
+#define FLEX_BETA13,
+#define FLEXINT_H29,
+#define __STDC_LIMIT_MACROS 39,
+typedef int8_t flex_int8_t;43,
+typedef uint8_t flex_uint8_t;44,
+typedef int16_t flex_int16_t;45,
+typedef uint16_t flex_uint16_t;46,
+typedef int32_t flex_int32_t;47,
+typedef uint32_t flex_uint32_t;48,
+typedef signed char flex_int8_t;50,
+typedef short int flex_int16_t;51,
+typedef int flex_int32_t;52,
+typedef unsigned char flex_uint8_t;53,
+typedef unsigned short int flex_uint16_t;54,
+typedef unsigned int flex_uint32_t;55,
+#define INT8_MIN 60,
+#define INT16_MIN 63,
+#define INT32_MIN 66,
+#define INT8_MAX 69,
+#define INT16_MAX 72,
+#define INT32_MAX 75,
+#define UINT8_MAX 78,
+#define UINT16_MAX 81,
+#define UINT32_MAX 84,
+#define YY_USE_CONST92,
+#define YY_USE_CONST98,
+#define yyconst 104,
+#define yyconst106,
+#define YY_NULL 110,
+#define YY_SC_TO_UI(117,
+#define BEGIN 123,
+#define YY_START 129,
+#define YYSTATE 130,
+#define YY_STATE_EOF(133,
+#define YY_NEW_FILE 136,
+#define YY_END_OF_BUFFER_CHAR 138,
+#define YY_BUF_SIZE 142,
+#define YY_STATE_BUF_SIZE 147,
+#define YY_TYPEDEF_YY_BUFFER_STATE150,
+typedef struct yy_buffer_state *YY_BUFFER_STATE;YY_BUFFER_STATE151,
+#define EOB_ACT_CONTINUE_SCAN 158,
+#define EOB_ACT_END_OF_FILE 159,
+#define EOB_ACT_LAST_MATCH 160,
+    #define YY_LESS_LINENO(162,
+#define yyless(165,
+#define unput(178,
+#define YY_TYPEDEF_YY_SIZE_T186,
+typedef unsigned int yy_size_t;187,
+#define YY_STRUCT_YY_BUFFER_STATE191,
+struct yy_buffer_state192,
+#define YY_BUFFER_NEW 238,
+#define YY_BUFFER_NORMAL 239,
+#define YY_BUFFER_EOF_PENDING 250,
+static size_t yy_buffer_stack_top 256,
+static size_t yy_buffer_stack_max 257,
+static YY_BUFFER_STATE * yy_buffer_stack 258,
+#define YY_CURRENT_BUFFER 266,
+#define YY_CURRENT_BUFFER_LVALUE 273,
+static char yy_hold_char;276,
+static int yy_n_chars;277,
+int yyleng;278,
+static char *yy_c_buf_p yy_c_buf_p281,
+static int yy_init 282,
+static int yy_start 283,
+static int yy_did_buffer_switch_on_eof;288,
+#define YY_FLUSH_BUFFER 302,
+#define yy_new_buffer 312,
+#define yy_set_interactive(314,
+#define yy_set_bol(324,
+#define YY_AT_BOL(334,
+typedef unsigned char YY_CHAR;338,
+FILE *yyin yyin340,
+typedef int yy_state_type;342,
+int yylineno 346,
+#define yytext_ptr 349,
+#define YY_DO_BEFORE_ACTION 359,
+#define YY_NUM_RULES 366,
+#define YY_END_OF_BUFFER 367,
+struct yy_trans_info370,
+static yyconst flex_int16_t yy_accept[yy_accept375,
+static yyconst flex_int32_t yy_ec[yy_ec383,
+static yyconst flex_int32_t yy_meta[yy_meta415,
+static yyconst flex_int16_t yy_base[yy_base421,
+static yyconst flex_int16_t yy_def[yy_def429,
+static yyconst flex_int16_t yy_nxt[yy_nxt437,
+static yyconst flex_int16_t yy_chk[yy_chk453,
+static yy_state_type yy_last_accepting_state;469,
+static char *yy_last_accepting_cpos;yy_last_accepting_cpos470,
+int yy_flex_debug 473,
+#define REJECT 478,
+#define yymore(479,
+#define YY_MORE_ADJ 480,
+#define YY_RESTORE_YY_MORE_OFFSET481,
+char *yytext;yytext482,
+#define INITIAL 511,
+#define YY_EXTRA_TYPE 522,
+#define YY_READ_BUF_SIZE 561,
+#define ECHO 569,
+#define YY_INPUT(576,
+#define yyterminate(613,
+#define YY_START_STACK_INCR 618,
+#define YY_FATAL_ERROR(623,
+#define YY_DECL_IS_OURS 632,
+#define YY_DECL 636,
+#define YY_USER_ACTION643,
+#define YY_BREAK 648,
+#define YY_RULE_SETUP 651,
+static int yy_get_next_buffer 965,
+    static yy_state_type yy_get_previous_state 1091,
+    static yy_state_type yy_try_NUL_trans 1123,
+    static void yyunput 1146,
+    static int yyinput 1185,
+    void yyrestart 1262,
+    void yy_switch_to_buffer 1279,
+static void yy_load_buffer_state 1310,
+    YY_BUFFER_STATE yy_create_buffer 1324,
+    void yy_delete_buffer 1352,
+    static void yy_init_buffer 1375,
+    void yy_flush_buffer 1403,
+void yypush_buffer_state 1432,
+void yypop_buffer_state 1462,
+static void yyensure_buffer_stack 1481,
+YY_BUFFER_STATE yy_scan_buffer 1526,
+YY_BUFFER_STATE yy_scan_string 1563,
+YY_BUFFER_STATE yy_scan_bytes 1576,
+#define YY_EXIT_FAILURE 1607,
+static void yy_fatal_error 1610,
+#undef yyless1618,
+#define yyless(1619,
+int yyget_lineno 1638,
+FILE *yyget_in yyget_in1647,
+FILE *yyget_out yyget_out1655,
+int yyget_leng 1663,
+char *yyget_text yyget_text1672,
+void yyset_lineno 1681,
+void yyset_in 1693,
+void yyset_out 1698,
+int yyget_debug 1703,
+void yyset_debug 1708,
+static int yy_init_globals 1713,
+int yylex_destroy 1742,
+static void yy_flex_strncpy 1768,
+static int yy_flex_strlen 1777,
+void *yyalloc yyalloc1787,
+void *yyrealloc yyrealloc1792,
+void yyfree 1804,
+#define YYTABLES_NAME 1809,
+
+map_parser.l,88
+double addfnumber(6,
+char *addstringl(addstringl11,
+char *addtexture(addtexture18,
+
+common/y.tab.c,432
+#define YYBISON 47,2141
+#define YYBISON_VERSION 50,2182
+#define YYSKELETON_NAME 53,2235
+#define YYPURE 56,2290
+#define YYLSP_NEEDED 59,2332
+# define YYTOKENTYPE65,2393
+   enum yytokentype 68,2517
+     NUMBER 69,2539
+     TNULL 70,2558
+     FNUMBER 71,2576
+     STRINGL 72,2596
+     TEXTURE 73,2616
+#define NUMBER 77,2663
+#define TNULL 78,2682
+#define FNUMBER 79,2700
+#define STRINGL 80,2720
+#define TEXTURE 81,2740
+
+map_parser.y,637
+struct vector start=9,
+struct planelist{planelist11,
+int listsize(17,
+struct planelist *addplane(addplane23,
+struct headerlist *addheader(addheader35,
+struct brushlist *addbrush(addbrush45,
+struct entity *addentity(addentity74,
+struct map *currentmap;currentmap100,
+int lineno=102,
+int cerrores=103,
+struct listaerr{listaerr105,
+struct listaerr *errores=errores110,
+int imprimirerrores(112,
+void yyerror(120,
+# define YYDEBUG 137,
+# undef YYERROR_VERBOSE142,
+# define YYERROR_VERBOSE 143,
+# define YYERROR_VERBOSE 145,
+# define YYTOKEN_TABLE 150,
+typedef union YYSTYPE154,
+int yywrap(197,
+int parsemap(202,
+
+y.tab.c,3437
+	YYSTYPE;257,
+# define yystype 258,
+# define YYSTYPE_IS_DECLARED 259,
+# define YYSTYPE_IS_TRIVIAL 260,
+# undef short272,
+typedef YYTYPE_UINT8 yytype_uint8;276,
+typedef unsigned char yytype_uint8;278,
+typedef YYTYPE_INT8 yytype_int8;282,
+typedef signed char yytype_int8;285,
+typedef short int yytype_int8;287,
+typedef YYTYPE_UINT16 yytype_uint16;291,
+typedef unsigned short int yytype_uint16;293,
+typedef YYTYPE_INT16 yytype_int16;297,
+typedef short int yytype_int16;299,
+#  define YYSIZE_T 304,
+#  define YYSIZE_T 306,
+#  define YYSIZE_T 310,
+#  define YYSIZE_T 312,
+#define YYSIZE_MAXIMUM 316,
+#   define YY_(322,
+#  define YY_(326,
+# define YYUSE(332,
+# define YYUSE(334,
+# define YYID(339,
+YYID 344,
+#    define YYSTACK_ALLOC 362,
+#    define YYSTACK_ALLOC 366,
+#    define alloca 369,
+#    define YYSTACK_ALLOC 371,
+#      define _STDLIB_H 376,
+#  define YYSTACK_FREE(385,
+#   define YYSTACK_ALLOC_MAXIMUM 391,
+#  define YYSTACK_ALLOC 394,
+#  define YYSTACK_FREE 395,
+#   define YYSTACK_ALLOC_MAXIMUM 397,
+#    define _STDLIB_H 404,
+#   define YYMALLOC 408,
+#   define YYFREE 415,
+union yyalloc430,
+# define YYSTACK_GAP_MAXIMUM 437,
+# define YYSTACK_BYTES(441,
+#   define YYCOPY(449,
+#   define YYCOPY(452,
+# define YYSTACK_RELOCATE(468,
+#define YYFINAL 482,
+#define YYLAST 484,
+#define YYNTOKENS 487,
+#define YYNNTS 489,
+#define YYNRULES 491,
+#define YYNSTATES 493,
+#define YYUNDEFTOK 496,
+#define YYMAXUTOK 497,
+#define YYTRANSLATE(499,
+static const yytype_uint8 yytranslate[yytranslate503,
+static const yytype_uint8 yyprhs[yyprhs537,
+static const yytype_int8 yyrhs[yyrhs544,
+static const yytype_uint8 yyrline[yyrline554,
+static const char *const yytname[yytname564,
+static const yytype_uint16 yytoknum[yytoknum575,
+static const yytype_uint8 yyr1[yyr1583,
+static const yytype_uint8 yyr2[yyr2590,
+static const yytype_uint8 yydefact[yydefact599,
+static const yytype_int8 yydefgoto[yydefgoto608,
+#define YYPACT_NINF 615,
+static const yytype_int8 yypact[yypact616,
+static const yytype_int8 yypgoto[yypgoto625,
+#define YYTABLE_NINF 634,
+static const yytype_uint8 yytable[yytable635,
+static const yytype_int8 yycheck[yycheck642,
+static const yytype_uint8 yystos[yystos651,
+#define yyerrok	659,
+#define yyclearin	660,
+#define YYEMPTY	661,
+#define YYEOF	662,
+#define YYACCEPT	664,
+#define YYABORT	665,
+#define YYERROR	666,
+#define YYFAIL	673,
+#define YYRECOVERING(675,
+#define YYBACKUP(677,
+#define YYTERROR	695,
+#define YYERRCODE	696,
+#define YYRHSLOC(703,
+# define YYLLOC_DEFAULT(705,
+#  define YY_LOCATION_PRINT(731,
+#  define YY_LOCATION_PRINT(736,
+# define YYLEX 744,
+# define YYLEX 746,
+#  define YYFPRINTF 754,
+# define YYDPRINTF(757,
+# define YY_SYMBOL_PRINT(763,
+yy_symbol_value_print 783,
+yy_symbol_print 815,
+yy_stack_print 841,
+# define YY_STACK_PRINT(855,
+yy_reduce_print 869,
+# define YY_REDUCE_PRINT(893,
+int yydebug;901,
+# define YYDPRINTF(903,
+# define YY_SYMBOL_PRINT(904,
+# define YY_STACK_PRINT(905,
+# define YY_REDUCE_PRINT(906,
+# define YYINITDEPTH 912,
+# define YYMAXDEPTH 923,
+#   define yystrlen 932,
+yystrlen 938,
+#   define yystpcpy 955,
+yystpcpy 962,
+yytnamerr 990,
+yysyntax_error 1037,
+      enum { YYERROR_VERBOSE_ARGS_MAXIMUM 1050,
+yydestruct 1147,
+int yychar;1190,
+YYSTYPE yylval;1193,
+int yynerrs;1196,
+yyparse 1208,
+#define YYPOPSTACK(1261,
+#  undef YYSTACK_RELOCATE1349,
+
+client/font.h,0
+
+client/events.h,0
+
+client/drawmap.h,0
+
+common/lex.yy.c,0

@@ -1,0 +1,22 @@
+TODO: 
+
+1. No controlar la maxima altura posible sino la maxima altura alcanzable en un tick.
+2. Analogamente con el piso.
+X3. Pasar el transport al loop principal.
+X4. Quita todos los prints y feedbacks del de salida estandar del server, iteran sobre el numero de players. x.x
+5. Ordenar los casos.
+X6. el error del max3i .x.x.x.x.x.x.x.
+
+X7. hace un movimiento de mas al llegar a los checkpoitns.
+X8. Quitar todos los manejos de errores.
+X9. Agregar controles a los movientos conrespecto a los limites la grilla en el sistema de colision.
+
+X?10. usar un vector en vez de una lista para los transporters, asi se puede acceder rapido. O(1). al calcular la posicion z para 11.
+X11. Cuando esta en el transporter el ground = transporter.actual.z
+
+X12. Agregar eso de que si entra por un lugar se queda trancado.
+X13. Agregar controles para que no entre a un transporter cuando esta o cuando sale de otro.
+
+X14. NPC system.
+15 Combat system.
+16. Go distributed
