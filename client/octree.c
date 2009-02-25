@@ -425,6 +425,7 @@ struct rect getrect(struct aabb box,int axis)
 
 /*
   0 si no hay interseccion
+  1 si hay
 */
 int interaabbbrush(struct aabb box,struct brush *bsh)
 {
