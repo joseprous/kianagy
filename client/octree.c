@@ -292,7 +292,9 @@ struct vector getpvertex(struct aabb box,struct plane p)
     return aux;
   }
 }
-
+/*
+  retorna el p vertex descripto en *graphics gems 4*
+*/
 struct vector getnvertex(struct aabb box,struct plane p)
 {
   struct vector aux;
