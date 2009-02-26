@@ -409,6 +409,10 @@ int interaabbaabb(struct aabb box1,struct aabb box2)
   return 1;
 }
 
+#define XY 0
+#define YZ 1
+#define XZ 2
+
 /*
   ###TODO###
 */
@@ -417,11 +421,29 @@ struct poly getsilhouette(struct brush *bsh,int axis)
   
 }
 /*
-  ###TODO###
+  devuelve la proyeccion de un aabb en un eje
 */
 struct rect getrect(struct aabb box,int axis)
 {
-  
+  struct rect aux;
+  if(axis==XY){
+    aux.min.x=box.min.x;
+    aux.min.y=box.min.y;
+    aux.max.x=box.max.x;
+    aux.max.y=box.max.y;
+    return aux;
+  }
+  if(axis==YZ){
+    aux.min.x=box.min.y;
+    aux.min.y=box.min.z;
+    aux.max.x=box.max.y;
+    aux.max.y=box.max.z;
+    return aux;
+  }
+  aux.min.x=box.min.x;
+  aux.min.y=box.min.z;
+  aux.max.x=box.max.x;
+  aux.max.y=box.max.z;
 }
 
 
