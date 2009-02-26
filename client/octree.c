@@ -444,6 +444,7 @@ struct rect getrect(struct aabb box,int axis)
   aux.min.y=box.min.z;
   aux.max.x=box.max.x;
   aux.max.y=box.max.z;
+  return aux;
 }
 
 
