@@ -2,6 +2,10 @@
 #define OCTREE_H
 #include "../common/map.h"
 
+#define XY 0
+#define YZ 1
+#define XZ 2
+
 //Axis-aligned Bounding Box
 struct aabb{
   struct vector min,max;
