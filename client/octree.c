@@ -365,18 +365,33 @@ int interrectline(struct rect r,struct line l)
 }
 
 /*
-  ###TODO###
+  el poligono debe estar en el plano xy
+  se asume que el poligono tiene al menos un vertice
 */
 struct rect getbbox(struct poly p)
 {
-  
+  struct rect aux;
+  int i;
+  aux.min.x=p.vertexes[0].x;
+  aux.min.y=p.vertexes[0].y;
+  aux.max.x=p.vertexes[0].x;
+  aux.max.y=p.vertexes[0].y;
+  for(i=1;i<p.num;i++){
+    if(p.vertexes[i].x<aux.min.x)aux.min.x=p.vertexes[i].x;
+    if(p.vertexes[i].y<aux.min.y)aux.min.y=p.vertexes[i].y;
+    if(p.vertexes[i].x>aux.max.x)aux.max.x=p.vertexes[i].x;
+    if(p.vertexes[i].y>aux.max.y)aux.max.y=p.vertexes[i].y;
+  }
+  return aux;
 }
 /*
-  ###TODO###
+  retorna 0 si no hay interseccion, 1 si hay
 */
 int interrectrect(struct rect r1,struct rect r2)
 {
-  
+  if (r1.max.x < r2.min.x || r1.min.x > r2.max.x) return 0;
+  if (r1.max.y < r2.min.y || r1.min.y > r2.max.y) return 0;
+  return 1;  
 }
 
 /*
@@ -409,9 +424,6 @@ int interaabbaabb(struct aabb box1,struct aabb box2)
   return 1;
 }
 
-#define XY 0
-#define YZ 1
-#define XZ 2
 
 /*
   ###TODO###
