@@ -54,7 +54,7 @@ convert.o:
 	cd converter;gcc $(CFLAGS) -c convert.c;cd ..;
 
 clean :
-	rm build/server build/client build/converter converter/*.o common/*.o client/*.o server/*.o
+	rm build/server build/client build/converter converter/*.o common/*.o client/*.o server/*.o common/lex.yy.c common/y.tab.h common/y.tab.c
 
 tags: 
 	etags `find . -name '*.[ch]'`
