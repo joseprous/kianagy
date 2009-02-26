@@ -129,6 +129,8 @@ struct line line2points(struct vector p1,struct vector p2)
 	aux.point=p1;
 	return aux;	
 }
+
+
 int pointinline(struct vector point,struct line l)
 {
 	double res;

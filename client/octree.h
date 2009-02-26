@@ -6,6 +6,13 @@
 #define YZ 1
 #define XZ 2
 
+//ax + by + c = 0
+struct line2d{
+  struct vector normal;
+  double a,b,c;
+};
+
+
 //Axis-aligned Bounding Box
 struct aabb{
   struct vector min,max;

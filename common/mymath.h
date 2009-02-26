@@ -18,8 +18,8 @@ struct rect{
 };
 
 struct line{
-	struct vector dir;
-	struct vector point;	
+  struct vector dir;
+  struct vector point;
 };
 //ax+by+cz+d=0
 struct plane{

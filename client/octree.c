@@ -353,15 +353,56 @@ int interaabbplane(struct aabb box,struct plane p)
   return 0;
 }
 
+struct vector getpvertex2d(struct rect r,struct line2d l)
+{
+  struct vector aux;
+  if(l.normal.x>=0 && l.normal.y>=0)return r.max;
+  if(l.normal.x<=0 && l.normal.y<=0)return r.min;
+  if(p.normal.x>=0 && p.normal.y<=0){
+    aux.x=r.max.x;
+    aux.y=r.min.y;
+    return aux;
+  }
+  if(p.normal.x<=0 && p.normal.y>=0){
+    aux.x=r.min.x;
+    aux.y=r.max.y;
+    return aux;
+  }
+}
 /*
-  ###TODO###
+  retorna el p vertex descripto en *graphics gems 4*
+*/
+struct vector getnvertex2d(struct aabb box,struct plane p)
+{
+  struct vector aux;
+  if(l.normal.x<=0 && l.normal.y<=0)return r.max;
+  if(l.normal.x>=0 && l.normal.y>=0)return r.min;
+  if(p.normal.x<=0 && p.normal.y>=0){
+    aux.x=r.max.x;
+    aux.y=r.min.y;
+    return aux;
+  }
+  if(p.normal.x>=0 && p.normal.y<=0){
+    aux.x=r.min.x;
+    aux.y=r.max.y;
+    return aux;
+  }
+}
+
+
+/*
   0 si intersecta
   1 positive half plane
   -1 negative half plane
 */
-int interrectline(struct rect r,struct line l)
+int interrectline(struct rect r,struct line2d l)
 {
-
+  struct vector pv,nv;
+  pv=getpvertex2d(r,l);
+  nv=getnvertex2d(r,l);
+  if(pointinline2d(pv,l)==-1)return -1;
+  if(pointinline2d(nv,l)==1)return 1;
+  return 0;  
 }
 
 /*
