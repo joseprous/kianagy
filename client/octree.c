@@ -448,6 +448,7 @@ int interrectrect(struct rect r1,struct rect r2)
   return 1;  
 }
 
+/*si no anda invertir la normal*/
 struct line2d line2points2d(struct vector p1,struct vector p2)
 {
   struct line2d aux;
@@ -488,13 +489,72 @@ int interaabbaabb(struct aabb box1,struct aabb box2)
   return 1;
 }
 
+int compvectors(struct vector v1,struct vector v2)
+{
+  return (v1.x==v2.x && v1.y==v2.y && v1.z==v2.z);
+}
 
+int polysadj(struct poly p1,struct poly p2,struct vector *v1,struct vector *v2)
+{
+  int i,j;
+  for(i=0;i<p1.num;i++){
+    for(j=0;j<p2.num;j++){
+      if(compvectors(p1.vertexes[i],p2.vertexes[j])){
+	if(i+1<p1.num){
+	  if(j+1<p2.num){
+	    if(compvectors(p1.vertexes[i+1],p2.vertexes[j+1])){
+	      *v1=p1.vertexes[i];
+	      *v2=p1.vertexes[i+1];
+	      return 1;
+	    }
+	  }else{
+	    if(compvectors(p1.vertexes[i+1],p2.vertexes[0])){
+	      *v1=p1.vertexes[i];
+	      *v2=p1.vertexes[i+1];
+	      return 1;
+	    }	    
+	  }
+	}else{
+	  //no se si hace falta el else
+	  if(j+1<p2.num){
+	    if(compvectors(p1.vertexes[0],p2.vertexes[j+1])){
+	      *v1=p1.vertexes[i];
+	      *v2=p1.vertexes[0];
+	      return 1;
+	    }
+	  }else{
+	    if(compvectors(p1.vertexes[0],p2.vertexes[0])){
+	      *v1=p1.vertexes[i];
+	      *v2=p1.vertexes[0];
+	      return 1;
+	    }	    
+	  }	  
+	}
+      }
+    }
+  } 
+  return 0;
+}
 /*
   ###TODO###
 */
 struct poly getsilhouette(struct brush *bsh,int axis)
 {
-  
+  struct poly aux;
+  int i,j;
+  struct vector v1,v2;
+  aux.num=0;
+  aux.vertexes=NULL;
+
+  for(i=0;i<bsh->num;i++){
+    for(j=i;j<bsh->num;j++){
+      /*TODO: comparar las normales aqui*/
+      if(polysadj(bsh->polys[i],bsh->polys[j],&v1,&v2)){
+	
+      }
+    }
+  }
+  return aux;
 }
 /*
   devuelve la proyeccion de un aabb en un eje
