@@ -26,12 +26,12 @@ struct plane plane3points(87,1894
 int interlineplane(95,2078
 int pointinplane(109,2472
 struct line line2points(125,2735
-int pointinline(132,2873
-double distpointlineseg(148,3211
-struct vector segmidpoint(153,3382
-int comppoints(164,3590
-struct vector mulvecmatrix(170,3773
-struct vector rotatevecz(179,4053
+int pointinline(134,2875
+double distpointlineseg(150,3213
+struct vector segmidpoint(155,3384
+int comppoints(166,3592
+struct vector mulvecmatrix(172,3775
+struct vector rotatevecz(181,4055
 
 common/mymath.h,204
 #define MYMATH_H2,17
@@ -41,7 +41,7 @@ struct vector{vector8,107
 struct vector2d{vector2d12,141
 struct rect{rect16,176
 struct line{line20,221
-struct plane{plane25,295
+struct plane{plane25,296
 
 common/collisionsys.c,764
 struct Cell ***CreateMatrix(CreateMatrix7,103
@@ -325,26 +325,31 @@ struct player{player2,17
 #define NMOVES 21,279
 struct player_model{player_model23,299
 
-client/octree.c,607
-struct aabb getaabb(5,60
-struct aabb getmaxbox(19,359
-int pointinaabb(51,1032
-int brushinaabb(59,1230
-struct brushlist *getbrushes(getbrushes71,1457
-int checkaabb(97,1913
-struct loctree *_loadloctree(_loadloctree106,2067
-struct loctree *loadloctree(loadloctree199,4135
-void _loctreestats(204,4260
-void loctreestats(222,4568
-struct vector getpvertex(227,4632
-struct vector getnvertex(231,4694
-int interaabbplane(240,4829
-int interrectline(255,5155
-struct rect getbbox(260,5208
-int interrectrect(265,5251
-int interrectpoly(274,5396
-int interaabbaabb(288,5782
-int interaabbbrush(296,6056
+client/octree.c,781
+struct aabb getaabb(9,106
+struct aabb getmaxbox(34,692
+int pointinaabb(67,1366
+int brushinaabb(75,1564
+struct brushlist *getbrushes(getbrushes90,1845
+int checkaabb(116,2301
+struct loctree *_loadloctree(_loadloctree125,2455
+struct loctree *loadloctree(loadloctree222,4627
+void _loctreestats(227,4752
+void loctreestats(248,5121
+struct vector getpvertex(253,5185
+struct vector getnvertex(298,6292
+int interaabbplane(346,7414
+struct vector getpvertex2d(356,7667
+struct vector getnvertex2d(373,8043
+int pointinline2d(390,8420
+int interrectline(412,8768
+struct rect getbbox(426,9084
+int interrectrect(445,9600
+int interrectpoly(456,9876
+int interaabbaabb(474,10301
+struct poly getsilhouette(486,10595
+struct rect getrect(493,10708
+int interaabbbrush(522,11201
 
 client/md2.c,286
 vec3_t anorms_table[anorms_table15,241
@@ -406,10 +411,14 @@ client/client.h,422
 #define MESSAGE 35,578
 #define SETNAME 36,596
 
-client/octree.h,76
+client/octree.h,158
 #define OCTREE_H2,17
-struct aabb{aabb6,90
-struct loctree{loctree11,147
+#define XY 5,62
+#define YZ 6,75
+#define XZ 7,88
+struct line2d{line2d10,120
+struct aabb{aabb17,208
+struct loctree{loctree22,265
 
 client/network.c,255
 Uint32 lastmsg;11,201
