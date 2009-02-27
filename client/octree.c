@@ -353,39 +353,52 @@ int interaabbplane(struct aabb box,struct plane p)
   return 0;
 }
 
-struct vector getpvertex2d(struct rect r,struct line2d l)
+struct vector2d getpvertex2d(struct rect r,struct line2d l)
 {
-  struct vector aux;
+  struct vector2d aux;
   if(l.normal.x>=0 && l.normal.y>=0)return r.max;
   if(l.normal.x<=0 && l.normal.y<=0)return r.min;
-  if(p.normal.x>=0 && p.normal.y<=0){
+  if(l.normal.x>=0 && l.normal.y<=0){
     aux.x=r.max.x;
     aux.y=r.min.y;
     return aux;
   }
-  if(p.normal.x<=0 && p.normal.y>=0){
+  if(l.normal.x<=0 && l.normal.y>=0){
     aux.x=r.min.x;
     aux.y=r.max.y;
     return aux;
   }
 }
-/*
-  retorna el p vertex descripto en *graphics gems 4*
-*/
-struct vector getnvertex2d(struct aabb box,struct plane p)
+
+struct vector2d getnvertex2d(struct rect r,struct line2d l)
 {
-  struct vector aux;
+  struct vector2d aux;
   if(l.normal.x<=0 && l.normal.y<=0)return r.max;
   if(l.normal.x>=0 && l.normal.y>=0)return r.min;
-  if(p.normal.x<=0 && p.normal.y>=0){
+  if(l.normal.x<=0 && l.normal.y>=0){
     aux.x=r.max.x;
     aux.y=r.min.y;
     return aux;
   }
-  if(p.normal.x>=0 && p.normal.y<=0){
+  if(l.normal.x>=0 && l.normal.y<=0){
     aux.x=r.min.x;
     aux.y=r.max.y;
     return aux;
+  }
+}
+
+int pointinline2d(struct vector2d point,struct line2d l)
+{
+  double res;
+  res=l.a * point.x + l.b * point.y + l.c;
+  if(res<0.01 && res>0.01){
+    return 0;	
+  }else{
+    if(res<0){		
+      return -1;
+    }else{
+      return 1;			
+    }
   }
 }
 
@@ -397,7 +410,7 @@ struct vector getnvertex2d(struct aabb box,struct plane p)
 */
 int interrectline(struct rect r,struct line2d l)
 {
-  struct vector pv,nv;
+  struct vector2d pv,nv;
   pv=getpvertex2d(r,l);
   nv=getnvertex2d(r,l);
   if(pointinline2d(pv,l)==-1)return -1;
@@ -436,6 +449,14 @@ int interrectrect(struct rect r1,struct rect r2)
 }
 
 /*
+  ###TODO###
+*/
+struct line2d line2points2d(struct vector p1,struct vector p2)
+{
+  
+}
+
+/*
   se asume que estan en el plano x y
   retorna 0 si no hay interseccion, 1 si hay
 */
@@ -447,9 +468,9 @@ int interrectpoly(struct rect r,struct poly p)
   if(!interrectrect(r,bb))return 0;
   for(i=0;i<p.num-1;i++){
     //revisar line2points
-    if(interrectline(r,line2points(p.vertexes[i],p.vertexes[i+1]))==1)return 0;
+    if(interrectline(r,line2points2d(p.vertexes[i],p.vertexes[i+1]))==1)return 0;
   }
-  if(interrectline(r,line2points(p.vertexes[p.num-1],p.vertexes[0]))==1)return 0; 
+  if(interrectline(r,line2points2d(p.vertexes[p.num-1],p.vertexes[0]))==1)return 0; 
   return 1;
 }
 
