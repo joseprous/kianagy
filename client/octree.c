@@ -448,12 +448,15 @@ int interrectrect(struct rect r1,struct rect r2)
   return 1;  
 }
 
-/*
-  ###TODO###
-*/
 struct line2d line2points2d(struct vector p1,struct vector p2)
 {
-  
+  struct line2d aux;
+  aux.a=(p2.y-p1.y)/(p2.x-p1.x);
+  aux.b=-1;
+  aux.c=p1.y-aux.a*p1.x;
+  aux.normal.x=aux.a;
+  aux.normal.y=aux.b;
+  return aux;
 }
 
 /*
@@ -467,7 +470,6 @@ int interrectpoly(struct rect r,struct poly p)
   bb=getbbox(p);
   if(!interrectrect(r,bb))return 0;
   for(i=0;i<p.num-1;i++){
-    //revisar line2points
     if(interrectline(r,line2points2d(p.vertexes[i],p.vertexes[i+1]))==1)return 0;
   }
   if(interrectline(r,line2points2d(p.vertexes[p.num-1],p.vertexes[0]))==1)return 0; 
