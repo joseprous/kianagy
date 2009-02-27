@@ -1,3 +1,5 @@
+#ifndef CLIENT_H
+#define CLIENT_H
 #include <SDL/SDL.h>
 #include <SDL/SDL_thread.h>
 #include <SDL/SDL_image.h>
@@ -34,3 +36,6 @@
 
 #define MESSAGE 6
 #define SETNAME 7
+
+struct brush getviewfrustum();
+#endif

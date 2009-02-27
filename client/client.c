@@ -43,7 +43,7 @@ struct player *pj;
 double curent_time = 0;
 double last_time = 0;
 
-
+double fov, ratio, nearDist, farDist;
 
 float cam_x,cam_z,cam_y,cam_ang,cam_dist;
 float pj_ang;
@@ -225,7 +225,14 @@ void init(void)
 	glViewport(0, 0, (GLsizei) WIDTH, (GLsizei) HEIGHT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60,WIDTH/HEIGHT,1.5,10000);
+
+	fov=60;
+	ratio=WIDTH/HEIGHT;
+	nearDist=1.5;
+	farDist=10000;
+
+	gluPerspective(fov, ratio, nearDist, farDist);
+	//gluPerspective(60,WIDTH/HEIGHT,1.5,10000);
 	glMatrixMode(GL_MODELVIEW);
 	glClearColor(1, 1, 1, 0.0);
 	//glClearColor(0.0, 0.0, 0.5, 0.0);
@@ -376,6 +383,94 @@ void drawbullet(struct bullet *b)
 		glEnable( GL_TEXTURE_1D ); 			
 	glPopMatrix();		
 }
+
+struct brush getviewfrustum()
+{
+  struct brush aux;
+  int i;
+  struct vector vr,vp,vl,vu,vc;
+  double hnear,wnear,hfar,wfar;
+  //gluPerspective(fov, ratio, nearDist, farDist);
+  //gluLookAt(px,py,pz, lx,ly,lz, ux,uy,uz)
+
+  //gluLookAt(pj->x+cam_x, pj->y+cam_y, pj->z+cam_z, pj->x, pj->y, pj->z, 0.0, 0.0, 1.0);
+
+  vp.x=pj->x+cam_x;
+  vp.y=pj->x+cam_x;
+  vp.z=pj->x+cam_x;
+  vl.x=pj->x;
+  vl.y=pj->x;
+  vl.z=pj->x;
+  vu.x=0;
+  vu.y=0;
+  vu.z=1;
+  
+  vr=normalize(difvectors(vl,vp));
+
+  /*  px=pj->x+cam_x;
+  py=pj->y+cam_y;
+  pz=pj->z+cam_z;
+  */
+  
+  hnear = 2 * tan(fov / 2) * nearDist;
+  wnear = hnear * ratio;
+  hfar = 2 * tan(fov / 2) * farDist;
+  wfar = hfar * ratio;
+
+  aux.num=6;
+  aux.polys=malloc(sizeof(struct poly)*aux.num);
+  for(i=0;i<6;i++){
+    aux.polys[i].num=4;
+    aux.polys[i].vertexes=malloc(sizeof(struct vector)*4);
+  }
+  //near plane
+  //(hn/2)*vu+(wn/2)*vu+vp+nearDist*vr;
+  vc=sumvectors(vp,mulvector(nearDist,vr));
+  aux.polys[0].vertexes[0]=sumvectors(sumvectors(mulvector(hnear/2,vu),mulvector(wnear/2,vu)),vc);
+  aux.polys[0].vertexes[1]=sumvectors(sumvectors(mulvector(-hnear/2,vu),mulvector(wnear/2,vu)),vc);
+  aux.polys[0].vertexes[2]=sumvectors(sumvectors(mulvector(-hnear/2,vu),mulvector(-wnear/2,vu)),vc);
+  aux.polys[0].vertexes[3]=sumvectors(sumvectors(mulvector(hnear/2,vu),mulvector(-wnear/2,vu)),vc);
+  aux.polys[0].normal=mulvector(-1,vr);
+
+  //far plane
+  vc=sumvectors(vp,mulvector(farDist,vr));
+  aux.polys[1].vertexes[0]=sumvectors(sumvectors(mulvector(hfar/2,vu),mulvector(wfar/2,vu)),vc);
+  aux.polys[1].vertexes[1]=sumvectors(sumvectors(mulvector(-hfar/2,vu),mulvector(wfar/2,vu)),vc);
+  aux.polys[1].vertexes[2]=sumvectors(sumvectors(mulvector(-hfar/2,vu),mulvector(-wfar/2,vu)),vc);
+  aux.polys[1].vertexes[3]=sumvectors(sumvectors(mulvector(hfar/2,vu),mulvector(-wfar/2,vu)),vc);
+  aux.polys[1].normal=vr;
+
+  aux.polys[2].vertexes[0]=aux.polys[0].vertexes[0];
+  aux.polys[2].vertexes[1]=aux.polys[1].vertexes[0];
+  aux.polys[2].vertexes[2]=aux.polys[1].vertexes[3];
+  aux.polys[2].vertexes[3]=aux.polys[0].vertexes[3];
+  aux.polys[2].normal=cross(difvectors(aux.polys[0].vertexes[0],aux.polys[0].vertexes[3]),
+			    difvectors(aux.polys[1].vertexes[3],aux.polys[0].vertexes[3]));
+
+  aux.polys[3].vertexes[0]=aux.polys[0].vertexes[0];
+  aux.polys[3].vertexes[1]=aux.polys[1].vertexes[0];
+  aux.polys[3].vertexes[2]=aux.polys[1].vertexes[1];
+  aux.polys[3].vertexes[3]=aux.polys[0].vertexes[1];
+  aux.polys[2].normal=cross(difvectors(aux.polys[0].vertexes[1],aux.polys[0].vertexes[0]),
+			    difvectors(aux.polys[1].vertexes[0],aux.polys[0].vertexes[0]));
+
+  aux.polys[4].vertexes[0]=aux.polys[0].vertexes[1];
+  aux.polys[4].vertexes[1]=aux.polys[1].vertexes[1];
+  aux.polys[4].vertexes[2]=aux.polys[1].vertexes[2];
+  aux.polys[4].vertexes[3]=aux.polys[0].vertexes[2];
+  aux.polys[2].normal=cross(difvectors(aux.polys[1].vertexes[2],aux.polys[0].vertexes[2]),
+			    difvectors(aux.polys[0].vertexes[1],aux.polys[0].vertexes[2]));
+
+  aux.polys[5].vertexes[0]=aux.polys[0].vertexes[3];
+  aux.polys[5].vertexes[1]=aux.polys[1].vertexes[3];
+  aux.polys[5].vertexes[2]=aux.polys[1].vertexes[2];
+  aux.polys[5].vertexes[3]=aux.polys[0].vertexes[2];
+  aux.polys[2].normal=cross(difvectors(aux.polys[0].vertexes[3],aux.polys[0].vertexes[2]),
+			    difvectors(aux.polys[1].vertexes[2],aux.polys[0].vertexes[2]));
+
+  return aux;
+}
+
 
 void display(void)
 {

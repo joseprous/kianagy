@@ -538,7 +538,6 @@ int polysadj(struct poly p1,struct poly p2,struct vector *v1,struct vector *v2)
 
 void addvertex(struct poly *p,struct vector v,int axis)
 {
-  /*TODO: eliminar repetidos*/
   p->num++;
   p->vertexes=realloc(p->vertexes,sizeof(struct vector)*p->num);
   switch(axis){
@@ -567,7 +566,7 @@ int signo(double a,double b)
 struct poly getsilhouette(struct brush *bsh,int axis)
 {
   struct poly aux;
-  int i,j;
+  int i,j,c;
   struct vector v1,v2;
   aux.num=0;
   aux.vertexes=NULL;
@@ -584,7 +583,37 @@ struct poly getsilhouette(struct brush *bsh,int axis)
       }
     }
   }
+  switch(axis){
+  case XY:
+    aux.normal.x=0;
+    aux.normal.y=0;
+    aux.normal.z=1;
+    break;
+  case YZ:
+    aux.normal.x=1;
+    aux.normal.y=0;
+    aux.normal.z=0;
+    break;
+  case XZ:
+    aux.normal.x=0;
+    aux.normal.y=1;
+    aux.normal.z=0;
+    break;
+  }
   ordervertexes(&aux);
+
+  //elimina repetidos
+  c=0;
+  for(i=0;i<aux.num-1;i++){
+    if(compvectors(aux.vertexes[i],aux.vertexes[i+1])){
+      for(j=i;j<aux.num-1;j++){
+	aux.vertexes[j]=aux.vertexes[j+1];
+      }
+      c++;
+    }
+  }
+  aux.num-=c;
+
   return aux;
 }
 /*
@@ -634,7 +663,11 @@ int interaabbbrush(struct aabb box,struct brush *bsh)
     lp[i]=getsilhouette(bsh,i);
   }
   for(i=0;i<3;i++){
-    if(interrectpoly(getrect(box,i),lp[i])==0)return 0;
+    if(interrectpoly(getrect(box,i),lp[i])==0){
+      for(i=0;i<3;i++)free(lp[i].vertexes);
+      return 0;
+    }
   }
+  for(i=0;i<3;i++)free(lp[i].vertexes);
   return 1;
 }

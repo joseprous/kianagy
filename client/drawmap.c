@@ -269,45 +269,60 @@ void _drawmap(struct map *m)
 	glPopMatrix();		
 }
 
-void __drawloctree(struct loctree *m,int mode)
+void __drawloctree(struct loctree *m,int mode,struct brush *vf)
 {
   int i;
   struct brushlist *bl;	
-  if(!m)return; 
+  if(!m||!interaabbbrush(m->box,vf))return; 
   bl=m->brushes;
   while(bl){
     drawbrush(bl->bsh,mode);
     bl=bl->next;
   }
   for(i=0;i<8;i++){
-    __drawloctree(m->hijos[i],mode);
+    __drawloctree(m->hijos[i],mode,vf);
   }  
+}
+
+void freebrush(struct brush *bsh)
+{
+  int i,j;
+  for(i=0;i<bsh->num;i++){
+    if(bsh->polys[i].vertexes){
+      free(bsh->polys[i].vertexes);
+      bsh->polys[i].vertexes=NULL;
+    }
+  }
+  free(bsh->polys);
+  bsh->polys=NULL;
 }
 
 void _drawloctree(struct loctree *m,int mode)
 {
-	
-	if(mode==WIREFRAME){
-		glLineWidth(3);
-		glColor3f(0,0,0);
-		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-	}
-	if(mode==FLAT){
-		glEnable (GL_TEXTURE_1D);									
-		glBindTexture (GL_TEXTURE_1D, shaderTexture[0]);			
-		glColor3f (0.5f, 0.5f, 0.5f);	
-	}
-	__drawloctree(m,mode);
-	if(mode==WIREFRAME){
-		glLineWidth(1);
-		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-	}
-	if(mode==FLAT){	
-		glDisable (GL_TEXTURE_1D);
-	}
+  struct brush vf; //view frustum
+  vf=getviewfrustum();	
+  if(mode==WIREFRAME){
+    glLineWidth(3);
+    glColor3f(0,0,0);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+  }
+  if(mode==FLAT){
+    glEnable (GL_TEXTURE_1D);									
+    glBindTexture (GL_TEXTURE_1D, shaderTexture[0]);			
+    glColor3f (0.5f, 0.5f, 0.5f);	
+  }
+  __drawloctree(m,mode,&vf);
+  if(mode==WIREFRAME){
+    glLineWidth(1);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+  }
+  if(mode==FLAT){	
+    glDisable (GL_TEXTURE_1D);
+  }
+  freebrush(&vf);
 }
 
-void drawloctree(struct loctree *m)
+/*void drawloctree(struct loctree *m)
 {
 	glPushMatrix();		
 	        glFrontFace(GL_CCW);
@@ -324,4 +339,23 @@ void drawloctree(struct loctree *m)
 		glDepthFunc (GL_LESS);
 		glCullFace(GL_BACK);	
 	glPopMatrix();		  
+	}*/
+
+
+
+void drawloctree(struct loctree *m)
+{  
+  glPushMatrix();		
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
+    _drawloctree(m,FLAT);
+    glCullFace(GL_FRONT);
+    glEnable (GL_BLEND);									
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);		
+    glDepthFunc (GL_LEQUAL);	
+    _drawloctree(m,WIREFRAME);
+    glDisable (GL_BLEND);	
+    glDepthFunc (GL_LESS);
+    glCullFace(GL_BACK);	
+  glPopMatrix();		  
 }
