@@ -535,6 +535,27 @@ int polysadj(struct poly p1,struct poly p2,struct vector *v1,struct vector *v2)
   } 
   return 0;
 }
+
+void addvertex(struct poly *p,struct vector v,int axis)
+{
+  /*TODO: eliminar repetidos*/
+  p->num++;
+  p->vertexes=realloc(p->vertexes,sizeof(struct vector)*p->num);
+  switch(axis){
+  case XY:
+    p->vertexes[p->num-1].x=v.x;
+    p->vertexes[p->num-1].y=v.y;
+    break;
+  case YZ:
+    p->vertexes[p->num-1].x=v.y;
+    p->vertexes[p->num-1].y=v.z;
+    break;
+  case XZ:
+    p->vertexes[p->num-1].x=v.x;
+    p->vertexes[p->num-1].y=v.z;
+  }
+}
+
 /*
   ###TODO###
 */
@@ -550,10 +571,12 @@ struct poly getsilhouette(struct brush *bsh,int axis)
     for(j=i;j<bsh->num;j++){
       /*TODO: comparar las normales aqui*/
       if(polysadj(bsh->polys[i],bsh->polys[j],&v1,&v2)){
-	
+	addvertex(&aux,v1,axis);
+	addvertex(&aux,v2,axis);
       }
     }
   }
+  /*TODO: ordenar vertices*/
   return aux;
 }
 /*
