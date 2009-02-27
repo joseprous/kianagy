@@ -28,5 +28,6 @@ struct loctree{
 struct loctree *loadloctree(struct map *m,float size,int maxdepth);
 
 void loctreestats(struct loctree *m);
+int interaabbbrush(struct aabb box,struct brush *bsh);
 
 #endif

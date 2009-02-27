@@ -59,6 +59,8 @@ struct map{
 struct brush *loadbrush(struct rawbrush *b);
 	
 int parsemap(char *file);
+void ordervertexes(struct poly *p);
+
 
 extern struct map *currentmap;
 #endif

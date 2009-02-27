@@ -554,11 +554,16 @@ void addvertex(struct poly *p,struct vector v,int axis)
     p->vertexes[p->num-1].x=v.x;
     p->vertexes[p->num-1].y=v.z;
   }
+  p->vertexes[p->num-1].z=0;
 }
 
-/*
-  ###TODO###
-*/
+
+int signo(double a,double b)
+{
+  if((a<0 && b<0) || (a>0 && b>0))return 1;
+  return 0;
+}
+
 struct poly getsilhouette(struct brush *bsh,int axis)
 {
   struct poly aux;
@@ -569,14 +574,17 @@ struct poly getsilhouette(struct brush *bsh,int axis)
 
   for(i=0;i<bsh->num;i++){
     for(j=i;j<bsh->num;j++){
-      /*TODO: comparar las normales aqui*/
-      if(polysadj(bsh->polys[i],bsh->polys[j],&v1,&v2)){
-	addvertex(&aux,v1,axis);
-	addvertex(&aux,v2,axis);
+      if((axis==XY && signo(bsh->polys[i].normal.z,bsh->polys[j].normal.z))||
+	 (axis==YZ && signo(bsh->polys[i].normal.x,bsh->polys[j].normal.x))||
+	 (axis==XZ && signo(bsh->polys[i].normal.y,bsh->polys[j].normal.y))){
+	if(polysadj(bsh->polys[i],bsh->polys[j],&v1,&v2)){
+	  addvertex(&aux,v1,axis);
+	  addvertex(&aux,v2,axis);
+	}
       }
     }
   }
-  /*TODO: ordenar vertices*/
+  ordervertexes(&aux);
   return aux;
 }
 /*
