@@ -445,7 +445,7 @@ int interrectline(struct rect r,struct line2d l)
   struct vector2d pv,nv;
   pv=getpvertex2d(r,l);
   nv=getnvertex2d(r,l);
-  //printf("pvert:<%lf %lf>\n",pv.x,pv.y);
+  //  printf("pvert:<%lf %lf>\n",pv.x,pv.y);
   //printf("nvert:<%lf %lf>\n",nv.x,nv.y);
 
   if(pointinline2d(pv,l)==-1)return -1;
@@ -483,15 +483,54 @@ int interrectrect(struct rect r1,struct rect r2)
   return 1;  
 }
 
-/*si no anda invertir la normal*/
+/*
+  si no anda invertir la normal
+*/
 struct line2d line2points2d(struct vector p1,struct vector p2)
 {
   struct line2d aux;
-  aux.a=((p2.y-p1.y)/(p2.x-p1.x))*(1);
-  aux.b=(-1)*(1);
-  aux.c=(p1.y-aux.a*p1.x)*(1);
+  struct vector n1,n2;
+  n1.x=0;
+  n1.y=0;
+  n1.z=-1;
+
+  if(p1.x==p2.x){
+    aux.normal.x=1;
+    aux.normal.y=0;
+    aux.normal.z=0;
+    n2=cross(difvectors(p2,p1),n1);
+    if(((aux.normal.x<-0.001||aux.normal.x>0.001) && (n2.x<-0.001||n2.x>0.001) 
+	&& signo(aux.normal.x,n2.x))||signo(aux.normal.y,n2.y)){
+      aux.a=1;
+      aux.b=0;
+      aux.c=-p1.x;
+    }else{
+      aux.a=-1;
+      aux.b=0;
+      aux.c=p1.x;
+    }    
+  }else{
+    aux.normal.x=((p2.y-p1.y)/(p2.x-p1.x));
+    aux.normal.y=(-1);
+    aux.normal.z=0;
+    n2=cross(difvectors(p2,p1),n1);
+    if(((aux.normal.x<-0.001||aux.normal.x>0.001) && (n2.x<-0.001||n2.x>0.001) 
+	&& signo(aux.normal.x,n2.x))||signo(aux.normal.y,n2.y)){
+      aux.a=aux.normal.x;
+      aux.b=aux.normal.y;
+      aux.c=p1.y-aux.a*p1.x;
+    }else{
+      aux.a=aux.normal.x*(-1);
+      aux.b=aux.normal.y*(-1);
+      aux.c=(p1.y-aux.a*p1.x)*(-1);    
+    }
+  }
+  
+  /*  aux.a=((p2.y-p1.y)/(p2.x-p1.x))*(-1);
+  aux.b=(-1)*(-1);
+  aux.c=(p1.y-aux.a*p1.x)*(-1);
   aux.normal.x=aux.a*(-1);
-  aux.normal.y=aux.b*(-1);
+  aux.normal.y=aux.b*(-1);*/
   return aux;
 }
 
@@ -504,7 +543,7 @@ int interrectpoly(struct rect r,struct poly p)
   int i;
   struct rect bb;//bounding box del poly
   bb=getbbox(p);
-  //  printf("entro\n");
+  //printf("entro\n");
   if(!interrectrect(r,bb))return 0;
   //printf("1\n");
   //printf("rect: <%lf %lf> <%lf %lf>\n",r.min.x,r.min.y,r.max.x,r.max.y);
@@ -539,6 +578,7 @@ int interaabbaabb(struct aabb box1,struct aabb box2)
 
 int compvectors(struct vector v1,struct vector v2,double prec)
 {
+  //  prec=0.005;
 	if((v1.x > v2.x-prec && v1.x < v2.x+prec)&&
 	   (v1.y > v2.y-prec && v1.y < v2.y+prec)&&
 	   (v1.z > v2.z-prec && v1.z < v2.z+prec))
@@ -558,16 +598,16 @@ int polysadj(struct poly p1,struct poly p2,struct vector *v1,struct vector *v2)
   int i,j;
   for(i=0;i<p1.num;i++){
     for(j=0;j<p2.num;j++){
-      if(compvectors(p1.vertexes[i],p2.vertexes[j],5)){
+      if(compvectors(p1.vertexes[i],p2.vertexes[j],2)){
 	if(i+1<p1.num){
 	  if(j+1<p2.num){
-	    if(compvectors(p1.vertexes[i+1],p2.vertexes[j+1],5)){
+	    if(compvectors(p1.vertexes[i+1],p2.vertexes[j+1],2)){
 	      *v1=p1.vertexes[i];
 	      *v2=p1.vertexes[i+1];
 	      return 1;
 	    }
 	  }else{
-	    if(compvectors(p1.vertexes[i+1],p2.vertexes[0],5)){
+	    if(compvectors(p1.vertexes[i+1],p2.vertexes[0],2)){
 	      *v1=p1.vertexes[i];
 	      *v2=p1.vertexes[i+1];
 	      return 1;
@@ -576,13 +616,13 @@ int polysadj(struct poly p1,struct poly p2,struct vector *v1,struct vector *v2)
 	}else{
 	  //no se si hace falta el else
 	  if(j+1<p2.num){
-	    if(compvectors(p1.vertexes[0],p2.vertexes[j+1],5)){
+	    if(compvectors(p1.vertexes[0],p2.vertexes[j+1],2)){
 	      *v1=p1.vertexes[i];
 	      *v2=p1.vertexes[0];
 	      return 1;
 	    }
 	  }else{
-	    if(compvectors(p1.vertexes[0],p2.vertexes[0],5)){
+	    if(compvectors(p1.vertexes[0],p2.vertexes[0],2)){
 	      *v1=p1.vertexes[i];
 	      *v2=p1.vertexes[0];
 	      return 1;
@@ -614,7 +654,7 @@ void addvertex(struct poly *p,struct vector v,int axis)
   }
   aux.z=0;
   for(i=0;i<p->num;i++){
-    if(compvectors(aux,p->vertexes[i],5))return;
+    if(compvectors(aux,p->vertexes[i],2))return;
   }
   p->num++;
   p->vertexes=realloc(p->vertexes,sizeof(struct vector)*p->num);
@@ -650,7 +690,7 @@ struct poly getsilhouette(struct brush *bsh,int axis)
   }
   aux.normal.x=0;
   aux.normal.y=0;
-  aux.normal.z=1;
+  aux.normal.z=-1;
   ordervertexes(&aux);
   return aux;
 }
@@ -714,7 +754,7 @@ int interaabbbrush(struct aabb box,struct brush *bsh)
   }
 
 
-  return 1;//***************************************************************************
+  //  return 1;//***************************************************************************
 
   for(i=0;i<3;i++){
     lp[i]=getsilhouette(bsh,i);
@@ -725,6 +765,7 @@ int interaabbbrush(struct aabb box,struct brush *bsh)
       //printf("rect: <%lf %lf> <%lf %lf>\n",r.min.x,r.min.y,r.max.x,r.max.y);
       //printf("poly:"); printpoly(lp[i]);
       //printf("\n");
+      //exit(0);
       for(i=0;i<3;i++)free(lp[i].vertexes);
       return 0;
     }
