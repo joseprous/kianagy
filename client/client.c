@@ -231,7 +231,7 @@ void init(void)
 	fov=60;
 	ratio=WIDTH/HEIGHT;
 	nearDist=1.5;
-	farDist=1000;
+	farDist=10000;
 
 	gluPerspective(fov, ratio, nearDist, farDist);
 	//gluPerspective(60,WIDTH/HEIGHT,1.5,10000);
@@ -390,7 +390,7 @@ struct brush getviewfrustum()
 {
   struct brush aux;
   int i;
-  struct vector vr,vp,vl,vu,vc;
+  struct vector vr,vp,vl,vu,vc,p1,p2;
   double hnear,wnear,hfar,wfar;
   //gluPerspective(fov, ratio, nearDist, farDist);
   //gluLookAt(px,py,pz, lx,ly,lz, ux,uy,uz)
@@ -398,11 +398,11 @@ struct brush getviewfrustum()
   //gluLookAt(pj->x+cam_x, pj->y+cam_y, pj->z+cam_z, pj->x, pj->y, pj->z, 0.0, 0.0, 1.0);
 
   vp.x=pj->x+cam_x;
-  vp.y=pj->x+cam_x;
-  vp.z=pj->x+cam_x;
+  vp.y=pj->y+cam_y;
+  vp.z=pj->z+cam_z;
   vl.x=pj->x;
-  vl.y=pj->x;
-  vl.z=pj->x;
+  vl.y=pj->y;
+  vl.z=pj->z;
   vu.x=0;
   vu.y=0;
   vu.z=1;
@@ -429,27 +429,45 @@ struct brush getviewfrustum()
 
   aux.num=6;
   aux.polys=malloc(sizeof(struct poly)*aux.num);
-  for(i=0;i<6;i++){
+  for(i=0;i<aux.num;i++){
     aux.polys[i].num=4;
     aux.polys[i].vertexes=malloc(sizeof(struct vector)*4);
+    aux.polys[i].tex.name=0;
   }
   //near plane
   //(hn/2)*vu+(wn/2)*vu+vp+nearDist*vr;
   vc=sumvectors(vp,mulvector(nearDist,vr));
-  aux.polys[0].vertexes[0]=sumvectors(sumvectors(mulvector(hnear/2,vu),mulvector(wnear/2,vu)),vc);
-  aux.polys[0].vertexes[1]=sumvectors(sumvectors(mulvector(-hnear/2,vu),mulvector(wnear/2,vu)),vc);
-  aux.polys[0].vertexes[2]=sumvectors(sumvectors(mulvector(-hnear/2,vu),mulvector(-wnear/2,vu)),vc);
-  aux.polys[0].vertexes[3]=sumvectors(sumvectors(mulvector(hnear/2,vu),mulvector(-wnear/2,vu)),vc);
+  p1=mulvector(wnear/2,normalize(cross(vu,vr)));
+  p2=mulvector(hnear/2,normalize(cross(p1,vr)));
+  aux.polys[0].vertexes[0]=sumvectors(vc,sumvectors(p1,p2));
+  aux.polys[0].vertexes[1]=sumvectors(vc,sumvectors(mulvector(-1,p1),p2));
+  aux.polys[0].vertexes[2]=sumvectors(vc,sumvectors(mulvector(-1,p1),mulvector(-1,p2)));
+  aux.polys[0].vertexes[3]=sumvectors(vc,sumvectors(p1,mulvector(-1,p2)));
   aux.polys[0].normal=mulvector(-1,vr);
 
+  
   //far plane
   vc=sumvectors(vp,mulvector(farDist,vr));
-  aux.polys[1].vertexes[0]=sumvectors(sumvectors(mulvector(hfar/2,vu),mulvector(wfar/2,vu)),vc);
-  aux.polys[1].vertexes[1]=sumvectors(sumvectors(mulvector(-hfar/2,vu),mulvector(wfar/2,vu)),vc);
-  aux.polys[1].vertexes[2]=sumvectors(sumvectors(mulvector(-hfar/2,vu),mulvector(-wfar/2,vu)),vc);
-  aux.polys[1].vertexes[3]=sumvectors(sumvectors(mulvector(hfar/2,vu),mulvector(-wfar/2,vu)),vc);
+  p1=mulvector(wfar/2,normalize(cross(vu,vr)));
+  p2=mulvector(hfar/2,normalize(cross(p1,vr)));
+  aux.polys[1].vertexes[0]=sumvectors(vc,sumvectors(p1,p2));
+  aux.polys[1].vertexes[1]=sumvectors(vc,sumvectors(mulvector(-1,p1),p2));
+  aux.polys[1].vertexes[2]=sumvectors(vc,sumvectors(mulvector(-1,p1),mulvector(-1,p2)));
+  aux.polys[1].vertexes[3]=sumvectors(vc,sumvectors(p1,mulvector(-1,p2)));
   aux.polys[1].normal=vr;
+  
 
+  /*  printpoly(aux.polys[1]);
+
+  printf("vp:");printvector(vp);
+  printf("\nvc:");printvector(vc);
+  printf("\nvr:");printvector(vr);
+  printf("\nvl:");printvector(vl);
+  printf("\nfov:%lf\nratio:%lf\nnearDist:%lf\nfarDist:%lf\n",fov, ratio, nearDist, farDist);
+  printf("\nhnear:%lf\nwnear%lf\nhfar:%lf\nwfar:%lf\n",hnear,wnear,hfar,wfar);
+  printf("\n\n");
+  */
+  
   aux.polys[2].vertexes[0]=aux.polys[0].vertexes[0];
   aux.polys[2].vertexes[1]=aux.polys[1].vertexes[0];
   aux.polys[2].vertexes[2]=aux.polys[1].vertexes[3];
@@ -477,7 +495,7 @@ struct brush getviewfrustum()
   aux.polys[5].vertexes[3]=aux.polys[0].vertexes[2];
   aux.polys[2].normal=cross(difvectors(aux.polys[0].vertexes[3],aux.polys[0].vertexes[2]),
 			    difvectors(aux.polys[1].vertexes[2],aux.polys[0].vertexes[2]));
-
+  
   //printbrush(&aux);
   //exit(0);
   return aux;

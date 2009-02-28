@@ -62,6 +62,8 @@ int otherkeys()
 SDL_Event event;
 int mover=0;
 
+extern int banvf;
+
 int handle_events()
 {
 	while (SDL_PollEvent(&event)){	
@@ -109,6 +111,9 @@ int handle_events()
 					}
 				}else{
 					switch (keysym.sym) {
+					        case SDLK_c:
+						  banvf=0;
+						  break;
 						case SDLK_d:
 							send_msg(RMOVE);
 							break;

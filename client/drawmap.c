@@ -297,9 +297,14 @@ void freebrush(struct brush *bsh)
   bsh->polys=NULL;
 }
 
+int banvf=-1;
+struct brush gvf;
+
+extern double farDist,fov, ratio, nearDist;
 void _drawloctree(struct loctree *m,int mode)
 {
   struct brush vf; //view frustum
+  //farDist=1000;
   vf=getviewfrustum();	
   if(mode==WIREFRAME){
     glLineWidth(3);
@@ -319,7 +324,12 @@ void _drawloctree(struct loctree *m,int mode)
   if(mode==FLAT){	
     glDisable (GL_TEXTURE_1D);
   }
-  freebrush(&vf);
+  if(banvf){
+    freebrush(&vf);
+  }else{
+    gvf=vf;
+    banvf=1;
+  }
 }
 
 /*void drawloctree(struct loctree *m)
@@ -342,10 +352,24 @@ void _drawloctree(struct loctree *m,int mode)
 	}*/
 
 
-
 void drawloctree(struct loctree *m)
-{  
+{ 
+
   glPushMatrix();		
+    if(banvf==1){
+      int i,j;
+      glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+      glDisable(GL_CULL_FACE);
+      glColor3f (1, 0, 0);
+      for(i=0;i<gvf.num;i++){
+	glBegin(GL_POLYGON);
+	for(j=0;j<gvf.polys[i].num;j++){
+	  glVertex3f(gvf.polys[i].vertexes[j].x,gvf.polys[i].vertexes[j].y, gvf.polys[i].vertexes[j].z);		
+	}
+	glEnd();	
+      }
+      glEnable(GL_CULL_FACE);
+    }
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
     _drawloctree(m,FLAT);

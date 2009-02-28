@@ -487,9 +487,9 @@ int interrectrect(struct rect r1,struct rect r2)
 struct line2d line2points2d(struct vector p1,struct vector p2)
 {
   struct line2d aux;
-  aux.a=((p2.y-p1.y)/(p2.x-p1.x))*(-1);
-  aux.b=(-1)*(-1);
-  aux.c=(p1.y-aux.a*p1.x)*(-1);
+  aux.a=((p2.y-p1.y)/(p2.x-p1.x))*(1);
+  aux.b=(-1)*(1);
+  aux.c=(p1.y-aux.a*p1.x)*(1);
   aux.normal.x=aux.a*(-1);
   aux.normal.y=aux.b*(-1);
   return aux;
@@ -548,6 +548,11 @@ int compvectors(struct vector v1,struct vector v2,double prec)
 	//  return (v1.x==v2.x && v1.y==v2.y && v1.z==v2.z);
 }
 
+/*
+  retorna 1 si los poligonos son adyacentes
+  y devuelve los valores de los vertices de la arista en comun en v1 y v2
+  retorna 0 sino
+*/
 int polysadj(struct poly p1,struct poly p2,struct vector *v1,struct vector *v2)
 {
   int i,j;
@@ -688,20 +693,29 @@ int interaabbbrush(struct aabb box,struct brush *bsh)
   struct poly lp[3];
   struct aabb bb;
   struct rect r;
+
+  return 1;//************************************
+
   bb=getaabb(bsh);
-  //printf("entro\n");
   if(!interaabbaabb(box,bb))return 0;
   //printf("1\n");
   //printaabb(box);
   //printaabb(bb);
   //printbrush(bsh);
   //exit(0);
+  
+  return 1;//***************************************88
+
+  //printf("2\n");
+
   for(i=0;i<bsh->num;i++){
     p=planepnormal(bsh->polys[i].vertexes[0],bsh->polys[i].normal);
     if(interaabbplane(box,p)==1)return 0;
   }
-  //printf("2\n");
-  
+
+
+  return 1;//***************************************************************************
+
   for(i=0;i<3;i++){
     lp[i]=getsilhouette(bsh,i);
   }
