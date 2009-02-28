@@ -358,8 +358,10 @@ void drawloctree(struct loctree *m)
   glPushMatrix();		
     if(banvf==1){
       int i,j;
+      glFrontFace(GL_CW);
+      glCullFace(GL_BACK);
       glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-      glDisable(GL_CULL_FACE);
+      //glDisable(GL_CULL_FACE);
       glColor3f (1, 0, 0);
       for(i=0;i<gvf.num;i++){
 	glBegin(GL_POLYGON);
@@ -368,7 +370,7 @@ void drawloctree(struct loctree *m)
 	}
 	glEnd();	
       }
-      glEnable(GL_CULL_FACE);
+      //glEnable(GL_CULL_FACE);
     }
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);

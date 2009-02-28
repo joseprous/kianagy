@@ -694,7 +694,7 @@ int interaabbbrush(struct aabb box,struct brush *bsh)
   struct aabb bb;
   struct rect r;
 
-  return 1;//************************************
+  //  return 1;//************************************
 
   bb=getaabb(bsh);
   if(!interaabbaabb(box,bb))return 0;
@@ -704,7 +704,7 @@ int interaabbbrush(struct aabb box,struct brush *bsh)
   //printbrush(bsh);
   //exit(0);
   
-  return 1;//***************************************88
+  //return 1;//***************************************88
 
   //printf("2\n");
 

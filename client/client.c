@@ -231,7 +231,7 @@ void init(void)
 	fov=60;
 	ratio=WIDTH/HEIGHT;
 	nearDist=1.5;
-	farDist=10000;
+	farDist=3000;
 
 	gluPerspective(fov, ratio, nearDist, farDist);
 	//gluPerspective(60,WIDTH/HEIGHT,1.5,10000);
@@ -472,29 +472,29 @@ struct brush getviewfrustum()
   aux.polys[2].vertexes[1]=aux.polys[1].vertexes[0];
   aux.polys[2].vertexes[2]=aux.polys[1].vertexes[3];
   aux.polys[2].vertexes[3]=aux.polys[0].vertexes[3];
-  aux.polys[2].normal=cross(difvectors(aux.polys[0].vertexes[0],aux.polys[0].vertexes[3]),
-			    difvectors(aux.polys[1].vertexes[3],aux.polys[0].vertexes[3]));
+  aux.polys[2].normal=cross(difvectors(aux.polys[2].vertexes[3],aux.polys[2].vertexes[0]),
+			    difvectors(aux.polys[2].vertexes[1],aux.polys[2].vertexes[0]));
 
-  aux.polys[3].vertexes[0]=aux.polys[0].vertexes[0];
-  aux.polys[3].vertexes[1]=aux.polys[1].vertexes[0];
-  aux.polys[3].vertexes[2]=aux.polys[1].vertexes[1];
-  aux.polys[3].vertexes[3]=aux.polys[0].vertexes[1];
-  aux.polys[2].normal=cross(difvectors(aux.polys[0].vertexes[1],aux.polys[0].vertexes[0]),
-			    difvectors(aux.polys[1].vertexes[0],aux.polys[0].vertexes[0]));
+  aux.polys[3].vertexes[0]=aux.polys[0].vertexes[1];
+  aux.polys[3].vertexes[1]=aux.polys[1].vertexes[1];
+  aux.polys[3].vertexes[2]=aux.polys[1].vertexes[0];
+  aux.polys[3].vertexes[3]=aux.polys[0].vertexes[0];
+  aux.polys[3].normal=cross(difvectors(aux.polys[3].vertexes[3],aux.polys[3].vertexes[0]),
+			    difvectors(aux.polys[3].vertexes[1],aux.polys[3].vertexes[0]));
 
-  aux.polys[4].vertexes[0]=aux.polys[0].vertexes[1];
-  aux.polys[4].vertexes[1]=aux.polys[1].vertexes[1];
-  aux.polys[4].vertexes[2]=aux.polys[1].vertexes[2];
-  aux.polys[4].vertexes[3]=aux.polys[0].vertexes[2];
-  aux.polys[2].normal=cross(difvectors(aux.polys[1].vertexes[2],aux.polys[0].vertexes[2]),
-			    difvectors(aux.polys[0].vertexes[1],aux.polys[0].vertexes[2]));
+  aux.polys[4].vertexes[0]=aux.polys[0].vertexes[2];
+  aux.polys[4].vertexes[1]=aux.polys[1].vertexes[2];
+  aux.polys[4].vertexes[2]=aux.polys[1].vertexes[1];
+  aux.polys[4].vertexes[3]=aux.polys[0].vertexes[1];
+  aux.polys[4].normal=cross(difvectors(aux.polys[4].vertexes[3],aux.polys[4].vertexes[0]),
+			    difvectors(aux.polys[4].vertexes[1],aux.polys[4].vertexes[0]));
 
   aux.polys[5].vertexes[0]=aux.polys[0].vertexes[3];
   aux.polys[5].vertexes[1]=aux.polys[1].vertexes[3];
   aux.polys[5].vertexes[2]=aux.polys[1].vertexes[2];
   aux.polys[5].vertexes[3]=aux.polys[0].vertexes[2];
-  aux.polys[2].normal=cross(difvectors(aux.polys[0].vertexes[3],aux.polys[0].vertexes[2]),
-			    difvectors(aux.polys[1].vertexes[2],aux.polys[0].vertexes[2]));
+  aux.polys[5].normal=cross(difvectors(aux.polys[5].vertexes[3],aux.polys[5].vertexes[0]),
+			    difvectors(aux.polys[5].vertexes[1],aux.polys[5].vertexes[0]));
   
   //printbrush(&aux);
   //exit(0);
