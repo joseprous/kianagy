@@ -40,6 +40,8 @@ struct player *players;
 
 struct player *pj;
 
+struct loctree *tree;
+
 double curent_time = 0;
 double last_time = 0;
 
@@ -229,7 +231,7 @@ void init(void)
 	fov=60;
 	ratio=WIDTH/HEIGHT;
 	nearDist=1.5;
-	farDist=10000;
+	farDist=1000;
 
 	gluPerspective(fov, ratio, nearDist, farDist);
 	//gluPerspective(60,WIDTH/HEIGHT,1.5,10000);
@@ -412,10 +414,18 @@ struct brush getviewfrustum()
   pz=pj->z+cam_z;
   */
   
-  hnear = 2 * tan(fov / 2) * nearDist;
+  hnear = 2 * tan((fov*(PI/180)) / 2) * nearDist;
   wnear = hnear * ratio;
-  hfar = 2 * tan(fov / 2) * farDist;
+  hfar = 2 * tan((fov*(PI/180)) / 2) * farDist;
   wfar = hfar * ratio;
+
+  
+  /*  printf("vp:");printvector(vp);
+  printf("\nvl:");printvector(vl);
+  printf("\nvu:");printvector(vu);
+  printf("\nvp:");printvector(vr);
+  printf("hnear:%lf\nwnear:%lf\nhfar:%lf\nwfar:%lf\n",hnear,wnear,hfar,wfar);
+  */
 
   aux.num=6;
   aux.polys=malloc(sizeof(struct poly)*aux.num);
@@ -468,6 +478,8 @@ struct brush getviewfrustum()
   aux.polys[2].normal=cross(difvectors(aux.polys[0].vertexes[3],aux.polys[0].vertexes[2]),
 			    difvectors(aux.polys[1].vertexes[2],aux.polys[0].vertexes[2]));
 
+  //printbrush(&aux);
+  //exit(0);
   return aux;
 }
 
@@ -494,7 +506,9 @@ void display(void)
 			aux=aux->next;		
 		}
 				
-		glCallList(map_list);
+		//		glCallList(map_list);
+		drawloctree (tree);
+
 		
 	//	if(bala.active)drawbullet(&bala);
 		
@@ -574,7 +588,7 @@ void uso()
 
 int main(int argc, char** argv)
 {
-  struct loctree *tree;
+
 	int kban=1;
 	const char* const short_options =  "fh:w:s:n:m:t:"; 
 	const struct option long_options[] = { 
@@ -657,12 +671,12 @@ int main(int argc, char** argv)
 
 	loctreestats(tree);
 
-	map_list=glGenLists(1);
+	/*	map_list=glGenLists(1);
 	glNewList(map_list, GL_COMPILE);
 	   //_drawmap(currentmap);	
 	   drawloctree (tree);
 	glEndList();
-	
+	*/
 	
 	if(!parsemap(stmap))return 0;
 
