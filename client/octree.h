@@ -27,7 +27,12 @@ struct loctree{
 
 struct loctree *loadloctree(struct map *m,float size,int maxdepth);
 
+struct poly getsilhouette(struct brush *bsh,int axis);
+
+struct aabb getaabb(struct brush *bsh);
+
 void loctreestats(struct loctree *m);
-int interaabbbrush(struct aabb box,struct brush *bsh);
+
+int interaabbbrush(struct aabb box,struct brush *bsh,struct aabb bb,struct poly *silh);
 
 #endif

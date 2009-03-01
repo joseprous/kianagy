@@ -718,17 +718,17 @@ struct rect getrect(struct aabb box,int axis)
   0 si no hay interseccion
   1 si hay
 */
-int interaabbbrush(struct aabb box,struct brush *bsh)
+int interaabbbrush(struct aabb box,struct brush *bsh,struct aabb bb,struct poly *silh)
 {
   int i;
   struct plane p;
-  struct poly lp[3];
-  struct aabb bb;
+  //  struct poly lp[3];
+  //struct aabb bb;
   struct rect r;
 
   //  return 1;//************************************
 
-  bb=getaabb(bsh);
+  //bb=getaabb(bsh);
   if(!interaabbaabb(box,bb))return 0;
   //printf("1\n");
   //printaabb(box);
@@ -748,22 +748,22 @@ int interaabbbrush(struct aabb box,struct brush *bsh)
 
   //  return 1;//***************************************************************************
 
-  for(i=0;i<3;i++){
+  /*  for(i=0;i<3;i++){
     lp[i]=getsilhouette(bsh,i);
-  }
+    }*/
   for(i=0;i<3;i++){
     r=getrect(box,i);
-    if(interrectpoly(r,lp[i])==0){
+    if(interrectpoly(r,silh[i])==0){
       //printf("rect: <%lf %lf> <%lf %lf>\n",r.min.x,r.min.y,r.max.x,r.max.y);
       //printf("poly:"); printpoly(lp[i]);
       //printf("\n");
       //exit(0);
-      for(i=0;i<3;i++)free(lp[i].vertexes);
+      //for(i=0;i<3;i++)free(silh[i].vertexes);
       return 0;
     }
   }
   //printf("3\n");
 
-  for(i=0;i<3;i++)free(lp[i].vertexes);
+  //for(i=0;i<3;i++)free(lp[i].vertexes);
   return 1;
 }

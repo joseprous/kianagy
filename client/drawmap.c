@@ -269,18 +269,18 @@ void _drawmap(struct map *m)
 	glPopMatrix();		
 }
 
-void __drawloctree(struct loctree *m,int mode,struct brush *vf)
+void __drawloctree(struct loctree *m,int mode,struct brush *vf,struct aabb vfbb,struct poly *silh)
 {
   int i;
-  struct brushlist *bl;	
-  if(!m||!interaabbbrush(m->box,vf))return; 
+  struct brushlist *bl;
+  if(!m||!interaabbbrush(m->box,vf,vfbb,silh))return; 
   bl=m->brushes;
   while(bl){
     drawbrush(bl->bsh,mode);
     bl=bl->next;
   }
   for(i=0;i<8;i++){
-    __drawloctree(m->hijos[i],mode,vf);
+    __drawloctree(m->hijos[i],mode,vf,vfbb,silh);
   }  
 }
 
@@ -304,7 +304,10 @@ extern double farDist,fov, ratio, nearDist;
 void _drawloctree(struct loctree *m,int mode)
 {
   struct brush vf; //view frustum
-  //farDist=1000;
+  struct aabb vfbb;//view frustum bounding box
+  int i;
+  struct poly silh[3];
+
   vf=getviewfrustum();	
   if(mode==WIREFRAME){
     glLineWidth(3);
@@ -316,7 +319,12 @@ void _drawloctree(struct loctree *m,int mode)
     glBindTexture (GL_TEXTURE_1D, shaderTexture[0]);			
     glColor3f (0.5f, 0.5f, 0.5f);	
   }
-  __drawloctree(m,mode,&vf);
+  vfbb=getaabb(&vf);
+  for(i=0;i<3;i++){
+    silh[i]=getsilhouette(&vf,i);
+  }
+  __drawloctree(m,mode,&vf,vfbb,silh);
+  for(i=0;i<3;i++)free(silh[i].vertexes);
   if(mode==WIREFRAME){
     glLineWidth(1);
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
