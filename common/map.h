@@ -2,30 +2,10 @@
 #define MAP_H
 #include "mymath.h"
 
-struct texture{
-	char *name;
-};
-
-struct points{
-	struct vector p[3];
-};
-
 struct rawbrush{
 	int num;
 	struct points *planes;
 	struct texture *textures;
-};
-
-struct poly{
-	int num;
-	struct vector *vertexes;
-	struct vector normal;
-	struct texture tex;
-};
-
-struct brush{
-  int num;
-  struct poly *polys;
 };
 
 struct brushlist{

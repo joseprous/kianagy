@@ -1,57 +1,58 @@
-CFLAGS=-O3 -g
+CFLAGS=-O3
 
 proyecto: client server converter
 
-client: parser client.o octree.o font.o md2.o mymath.o map.o network.o players.o drawmap.o events.o
+client: parser client/client.o client/octree.o client/font.o client/md2.o common/mymath.o common/map.o client/network.o client/players.o client/drawmap.o client/events.o
 	gcc $(CFLAGS) -o build/client client/client.o client/octree.o client/font.o client/md2.o client/network.o client/players.o client/events.o client/drawmap.o common/mymath.o common/map.o common/y.tab.o common/lex.yy.o `sdl-config --libs` -lGL -lGLU -lSDL_image;
 
-parser: 
+#common/parser: common/map_parser.y common/map_parser.l
+parser:
 	cd common;bison -y -d map_parser.y; flex map_parser.l; gcc $(CFLAGS) -c y.tab.c lex.yy.c;cd ..;
 
-client.o : 
-	cd client;gcc $(CFLAGS) -c client.c `sdl-config --cflags`;cd ..;
+client/client.o : client/client.c
+	gcc $(CFLAGS) -o client/client.o -c client/client.c `sdl-config --cflags`;
 
-octree.o :
-	cd client;gcc $(CFLAGS) -c octree.c;cd ..;
+client/octree.o : client/octree.c
+	gcc $(CFLAGS) -o client/octree.o -c client/octree.c;
 
-font.o : 
-	cd client;gcc $(CFLAGS) -c font.c;cd ..;
+client/font.o : client/font.c
+	gcc $(CFLAGS) -o client/font.o -c client/font.c;
 
-md2.o : 
-	cd client;gcc $(CFLAGS) -c md2.c;cd ..;
+client/md2.o : client/md2.c
+	gcc $(CFLAGS) -o client/md2.o -c client/md2.c;
 
-mymath.o : 
-	cd common;gcc $(CFLAGS) -c mymath.c;cd ..;
+client/network.o : client/network.c
+	gcc $(CFLAGS) -o client/network.o -c client/network.c;
 
-map.o : 
-	cd common;gcc $(CFLAGS) -c map.c;cd ..;
+client/players.o : client/players.c
+	gcc $(CFLAGS) -o client/players.o -c client/players.c;
 
-network.o :
-	cd client;gcc $(CFLAGS) -c network.c;cd ..
+client/drawmap.o : client/drawmap.c
+	gcc $(CFLAGS) -o client/drawmap.o -c client/drawmap.c;
 
-players.o :
-	cd client;gcc $(CFLAGS) -c players.c;cd ..
+client/events.o : client/events.c
+	gcc $(CFLAGS) -o client/events.o -c client/events.c;
 
-drawmap.o :
-	cd client;gcc $(CFLAGS) -c drawmap.c;cd ..
+common/mymath.o : common/mymath.c
+	gcc $(CFLAGS) -o common/mymath.o -c common/mymath.c;
 
-events.o :
-	cd client;gcc $(CFLAGS) -c events.c;cd ..
+common/map.o : common/map.c
+	gcc $(CFLAGS) -o common/map.o -c common/map.c;
 
-server: server.o mymath.o map.o collisionsys.o
+server: server/server.o common/mymath.o common/map.o common/collisionsys.o
 	gcc $(CFLAGS) -o build/server server/server.o common/map.o common/mymath.o common/collisionsys.o -lpthread -lm
 
-server.o :
-	cd server;gcc $(CFLAGS) -c server.c;cd ..;
+server/server.o : server/server.c
+	gcc $(CFLAGS) -o server/server.o -c server/server.c
 
-collisionsys.o :
-	cd common;gcc $(CFLAGS) -c collisionsys.c;cd ..;
+common/collisionsys.o : common/collisionsys.c
+	gcc $(CFLAGS) -o common/collisionsys.o -c common/collisionsys.c;
 
-converter: parser convert.o map.o collisionsys.o mymath.o
+converter: parser converter/convert.o common/map.o common/collisionsys.o common/mymath.o
 	gcc $(CFLAGS) -o build/converter converter/convert.o common/map.o common/mymath.o common/collisionsys.o common/y.tab.o common/lex.yy.o -lm
 
-convert.o: 
-	cd converter;gcc $(CFLAGS) -c convert.c;cd ..;
+converter/convert.o: converter/convert.c
+	gcc $(CFLAGS) -o converter/convert.o -c converter/convert.c;
 
 clean :
 	rm build/server build/client build/converter converter/*.o common/*.o client/*.o server/*.o common/lex.yy.c common/y.tab.h common/y.tab.c
