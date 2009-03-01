@@ -1,13 +1,21 @@
 CFLAGS=-O3
 
-proyecto: client server converter
+proyecto: build/client build/server build/converter
 
-client: parser client/client.o client/octree.o client/font.o client/md2.o common/mymath.o common/map.o client/network.o client/players.o client/drawmap.o client/events.o
+build/client: common/y.tab.o common/lex.yy.o client/client.o client/octree.o client/font.o client/md2.o common/mymath.o common/map.o client/network.o client/players.o client/drawmap.o client/events.o
 	gcc $(CFLAGS) -o build/client client/client.o client/octree.o client/font.o client/md2.o client/network.o client/players.o client/events.o client/drawmap.o common/mymath.o common/map.o common/y.tab.o common/lex.yy.o `sdl-config --libs` -lGL -lGLU -lSDL_image;
 
-#common/parser: common/map_parser.y common/map_parser.l
-parser:
-	cd common;bison -y -d map_parser.y; flex map_parser.l; gcc $(CFLAGS) -c y.tab.c lex.yy.c;cd ..;
+common/y.tab.o: common/y.tab.c
+	gcc $(CFLAGS) -o common/y.tab.o -c common/y.tab.c
+
+common/lex.yy.o: common/lex.yy.c
+	gcc $(CFLAGS) -o common/lex.yy.o -c common/lex.yy.c
+
+common/y.tab.c: common/map_parser.y
+	cd common;bison -y -d map_parser.y;cd ..;
+
+common/lex.yy.c: common/map_parser.l
+	cd common;flex map_parser.l;cd ..;
 
 client/client.o : client/client.c
 	gcc $(CFLAGS) -o client/client.o -c client/client.c `sdl-config --cflags`;
@@ -39,7 +47,7 @@ common/mymath.o : common/mymath.c
 common/map.o : common/map.c
 	gcc $(CFLAGS) -o common/map.o -c common/map.c;
 
-server: server/server.o common/mymath.o common/map.o common/collisionsys.o
+build/server: server/server.o common/mymath.o common/map.o common/collisionsys.o
 	gcc $(CFLAGS) -o build/server server/server.o common/map.o common/mymath.o common/collisionsys.o -lpthread -lm
 
 server/server.o : server/server.c
@@ -48,7 +56,7 @@ server/server.o : server/server.c
 common/collisionsys.o : common/collisionsys.c
 	gcc $(CFLAGS) -o common/collisionsys.o -c common/collisionsys.c;
 
-converter: parser converter/convert.o common/map.o common/collisionsys.o common/mymath.o
+build/converter: common/y.tab.o common/lex.yy.o converter/convert.o common/map.o common/collisionsys.o common/mymath.o
 	gcc $(CFLAGS) -o build/converter converter/convert.o common/map.o common/mymath.o common/collisionsys.o common/y.tab.o common/lex.yy.o -lm
 
 converter/convert.o: converter/convert.c
