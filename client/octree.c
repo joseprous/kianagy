@@ -522,15 +522,9 @@ struct line2d line2points2d(struct vector p1,struct vector p2)
     }else{
       aux.a=aux.normal.x*(-1);
       aux.b=aux.normal.y*(-1);
-      aux.c=(p1.y-aux.a*p1.x)*(-1);    
+      aux.c=(p1.y-aux.normal.x*p1.x)*(-1);    
     }
   }
-  
-  /*  aux.a=((p2.y-p1.y)/(p2.x-p1.x))*(-1);
-  aux.b=(-1)*(-1);
-  aux.c=(p1.y-aux.a*p1.x)*(-1);
-  aux.normal.x=aux.a*(-1);
-  aux.normal.y=aux.b*(-1);*/
   return aux;
 }
 
@@ -543,18 +537,16 @@ int interrectpoly(struct rect r,struct poly p)
   int i;
   struct rect bb;//bounding box del poly
   bb=getbbox(p);
-  //printf("entro\n");
   if(!interrectrect(r,bb))return 0;
-  //printf("1\n");
-  //printf("rect: <%lf %lf> <%lf %lf>\n",r.min.x,r.min.y,r.max.x,r.max.y);
-  //printpoly(p);
   for(i=0;i<p.num-1;i++){
     if(interrectline(r,line2points2d(p.vertexes[i],p.vertexes[i+1]))==1){
-      //printf("\n");
-      //printvector(p.vertexes[i]);
-      //printf("\n");
-      //printvector(p.vertexes[i+1]);
-      //exit(0);
+      /*printf("rect: <%lf %lf> <%lf %lf>\n",r.min.x,r.min.y,r.max.x,r.max.y);
+      printpoly(p);
+      printf("\n");
+      printvector(p.vertexes[i]);
+      printf("\n");
+      printvector(p.vertexes[i+1]);
+      exit(0);*/
       return 0;
     }
   }
