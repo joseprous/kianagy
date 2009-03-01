@@ -1,4 +1,5 @@
 #include "octree.h"
+#include "drawmap.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -167,6 +168,10 @@ struct loctree *_loadloctree(struct map *m,struct aabb box,float size,int depth)
 
   aux=malloc(sizeof(struct loctree));
   //aux->box=box;
+  
+  aux->gllistf=0;
+  aux->gllistw=0;
+
 
   mid.x=(box.min.x+box.max.x)/2;
   mid.y=(box.min.y+box.max.y)/2;
@@ -766,4 +771,30 @@ int interaabbbrush(struct aabb box,struct brush *bsh,struct aabb bb,struct poly 
 
   //for(i=0;i<3;i++)free(lp[i].vertexes);
   return 1;
+}
+
+void loctreegenlists(struct loctree *m,int maxdepth)
+{
+  struct brushlist *bl;
+  int i;
+  if(maxdepth<=0)return;
+  m->gllistf=glGenLists(1);
+  glNewList(m->gllistf, GL_COMPILE);
+     bl=m->brushes;
+     while(bl){
+       drawbrush(bl->bsh,FLAT);
+       bl=bl->next;
+     }
+  glEndList();
+  m->gllistw=glGenLists(1);
+  glNewList(m->gllistw, GL_COMPILE);
+     bl=m->brushes;
+     while(bl){
+       drawbrush(bl->bsh,WIREFRAME);
+       bl=bl->next;
+     }
+  glEndList();
+  for(i=0;i<8;i++){
+    loctreegenlists(m->hijos[i],maxdepth-1);
+  }  
 }

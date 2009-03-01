@@ -687,6 +687,8 @@ int main(int argc, char** argv)
 	tree=loadloctree(currentmap,0.25,5);
 	printf("loose octree cargado\n");
 
+	loctreegenlists(tree,2);
+	
 	loctreestats(tree);
 
 	/*	map_list=glGenLists(1);

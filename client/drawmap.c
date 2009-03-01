@@ -1,9 +1,6 @@
 #include "client.h"
 #include "drawmap.h"
 #include "octree.h"
-#define WIREFRAME 1
-#define SOLID 2
-#define FLAT 3
 extern struct vector lightAngle;
 extern GLuint	shaderTexture[1];	
 extern float shaderData[32][3];								
@@ -273,7 +270,23 @@ void __drawloctree(struct loctree *m,int mode,struct brush *vf,struct aabb vfbb,
 {
   int i;
   struct brushlist *bl;
-  if(!m||!interaabbbrush(m->box,vf,vfbb,silh))return; 
+  if(!m)return;
+  if(!interaabbbrush(m->box,vf,vfbb,silh))return; 
+  if(mode==WIREFRAME && m->gllistw){
+    glCallList(m->gllistw);
+    for(i=0;i<8;i++){
+      __drawloctree(m->hijos[i],mode,vf,vfbb,silh);
+    }
+    return;
+  }
+  if(mode==FLAT && m->gllistf){
+    glCallList(m->gllistf);
+    for(i=0;i<8;i++){
+      __drawloctree(m->hijos[i],mode,vf,vfbb,silh);
+    }
+    return;
+  }
+  
   bl=m->brushes;
   while(bl){
     drawbrush(bl->bsh,mode);
@@ -339,26 +352,6 @@ void _drawloctree(struct loctree *m,int mode)
     banvf=1;
   }
 }
-
-/*void drawloctree(struct loctree *m)
-{
-	glPushMatrix();		
-	        glFrontFace(GL_CCW);
-		glCullFace(GL_BACK);
-		_drawloctree(m,FLAT);
-		//drawmap(m,FLAT);
-		glCullFace(GL_FRONT);
-		glEnable (GL_BLEND);									
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);		
-		glDepthFunc (GL_LEQUAL);	
-		_drawloctree(m,WIREFRAME);
-		//drawmap(m,WIREFRAME);
-		glDisable (GL_BLEND);	
-		glDepthFunc (GL_LESS);
-		glCullFace(GL_BACK);	
-	glPopMatrix();		  
-	}*/
-
 
 void drawloctree(struct loctree *m)
 { 
