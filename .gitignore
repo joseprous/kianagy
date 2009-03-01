@@ -1,0 +1,9 @@
+*.o
+client
+converter
+server
+lex.yy.c
+y.tab.c
+y.tab.h
+TAGS
+
