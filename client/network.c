@@ -54,7 +54,7 @@ void send_txt()
 void send_name()
 {
 	char msg[200];
-	char buf[NAME_MAX_LENGTH+1];
+
 	//printf("name:");
 	//scanf("%s",buf);
 	sprintf(msg,"%d 0 %s..",SETNAME,myname);
@@ -268,7 +268,7 @@ void ini_network()
 	
 	thread_network = SDL_CreateThread (network, NULL);		
 }
-int end_network()
+void end_network()
 {
 	close(sockfd);	
 }

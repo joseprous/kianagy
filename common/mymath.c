@@ -589,6 +589,58 @@ void _addvertex(struct poly *p,struct vector v,int axis)
   p->vertexes=realloc(p->vertexes,sizeof(struct vector)*p->num);
   p->vertexes[p->num-1]=aux;
 }
+
+void ordervertexes(struct poly *p)
+{
+  struct vector centro,p1,p2,pointaux;
+  int i,ban;
+  double *angs,gdot,ga;
+  
+  angs=malloc(sizeof(double)*p->num);
+  centro.x=0;
+  centro.y=0;
+  centro.z=0;
+  for(i=0;i<p->num;i++){
+    centro.x+=p->vertexes[i].x;
+    centro.y+=p->vertexes[i].y;
+    centro.z+=p->vertexes[i].z;
+  }
+  centro.x/=p->num;
+  centro.y/=p->num;
+  centro.z/=p->num;
+		
+  p1=difvectors(p->vertexes[0],centro);
+  for(i=1;i<p->num;i++){			
+    p2=difvectors(p->vertexes[i],centro);
+    angs[i]=acos(dot(p1,p2)/(vectorlen(p1)*vectorlen(p2)));
+    pointaux=cross(p1,p2);
+    gdot=dot(pointaux,p->normal);
+			
+    if(gdot>-0.01 && gdot< 0.01){
+      angs[i]=PI;					
+    }else{
+      if(gdot<0){
+	angs[i]=2*PI-angs[i];					
+      }
+    }
+  }
+  do{
+    ban=0;
+    for(i=1;i<p->num-1;i++){
+      if(angs[i]>angs[i+1]){
+	ga=angs[i];
+	angs[i]=angs[i+1];
+	angs[i+1]=ga;
+	pointaux=p->vertexes[i];
+	p->vertexes[i]=p->vertexes[i+1];
+	p->vertexes[i+1]=pointaux;
+	ban=1;
+      }	
+    }
+  }while(ban);
+  free(angs);			  
+}
+
 /*
   retorna un poligono con la silueta del brush
   proyectada en el eje axis
@@ -596,7 +648,7 @@ void _addvertex(struct poly *p,struct vector v,int axis)
 struct poly getsilhouette(struct brush *bsh,int axis)
 {
   struct poly aux;
-  int i,j,c;
+  int i,j;
   struct vector v1,v2;
   aux.num=0;
   aux.vertexes=NULL;

@@ -13,7 +13,7 @@ extern double last_time;
 struct player_model models[3];
 struct md2_model_t weapons[20];
 
-int load_weapons()
+void load_weapons()
 {
 	if (!ReadMD2Model ("models/pknight/w_sshotgun.md2", &weapons[0])) exit (EXIT_FAILURE);
 	if (!ReadMD2Model ("models/pknight/w_rlauncher.md2", &weapons[1])) exit (EXIT_FAILURE);
@@ -29,7 +29,7 @@ int load_weapons()
 	if (!ReadMD2Model ("models/pknight/w_machinegun.md2", &weapons[11])) exit (EXIT_FAILURE);
 }
 
-int load_models()
+void load_models()
 {
 	if (!ReadMD2Model ("models/Ogros.md2", &models[0].md2file)) exit (EXIT_FAILURE);
 	models[0].fps=10;
@@ -111,7 +111,7 @@ void drawplayer(struct player *p)
 	glPopMatrix();		
 }
 
-int drawpj()
+void drawpj()
 {
 		glPushMatrix();
 			glTranslatef(pj->x,pj->y,pj->z);

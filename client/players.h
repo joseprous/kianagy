@@ -29,6 +29,6 @@ struct player_model{
 	int endframes[NMOVES];
 };
 
-int drawpj();
+void drawpj();
 void drawplayer(struct player *p);
-int load_models();
+void load_models();

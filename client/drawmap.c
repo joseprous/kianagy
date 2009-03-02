@@ -210,7 +210,7 @@ void drawpoly(struct poly p,int mode)
 
 void drawbrush(struct brush *b,int mode)
 {
-	int i,j;
+	int i;
 	for(i=0;i<b->num;i++){
 		if(!(b->polys[i].tex.name && !strcmp(b->polys[i].tex.name,"common/caulk"))) 
 			drawpoly(b->polys[i],mode);
@@ -299,7 +299,7 @@ void __drawloctree(struct loctree *m,int mode,struct brush *vf,struct aabb vfbb,
 
 void freebrush(struct brush *bsh)
 {
-  int i,j;
+  int i;
   for(i=0;i<bsh->num;i++){
     if(bsh->polys[i].vertexes){
       free(bsh->polys[i].vertexes);

@@ -7,4 +7,6 @@
 
 void _drawmap(struct map *m);
 void drawloctree(struct loctree *m);
+void drawbrush(struct brush *b,int mode);
+
 #endif

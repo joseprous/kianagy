@@ -35,62 +35,11 @@ void printvector(struct vector v)
 
 int pointinpoly(struct vector point,struct poly p)
 {
-	int i,j;
+	int i;
 	for(i=0;i<p.num;i++){
 		if(comppoints(point,p.vertexes[i]))return 1;	
 	}
 	return 0;	
-}
-
-void ordervertexes(struct poly *p)
-{
-  struct vector centro,p1,p2,pointaux;
-  int i,ban;
-  double *angs,gdot,ga;
-  
-  angs=malloc(sizeof(double)*p->num);
-  centro.x=0;
-  centro.y=0;
-  centro.z=0;
-  for(i=0;i<p->num;i++){
-    centro.x+=p->vertexes[i].x;
-    centro.y+=p->vertexes[i].y;
-    centro.z+=p->vertexes[i].z;
-  }
-  centro.x/=p->num;
-  centro.y/=p->num;
-  centro.z/=p->num;
-		
-  p1=difvectors(p->vertexes[0],centro);
-  for(i=1;i<p->num;i++){			
-    p2=difvectors(p->vertexes[i],centro);
-    angs[i]=acos(dot(p1,p2)/(vectorlen(p1)*vectorlen(p2)));
-    pointaux=cross(p1,p2);
-    gdot=dot(pointaux,p->normal);
-			
-    if(gdot>-0.01 && gdot< 0.01){
-      angs[i]=PI;					
-    }else{
-      if(gdot<0){
-	angs[i]=2*PI-angs[i];					
-      }
-    }
-  }
-  do{
-    ban=0;
-    for(i=1;i<p->num-1;i++){
-      if(angs[i]>angs[i+1]){
-	ga=angs[i];
-	angs[i]=angs[i+1];
-	angs[i+1]=ga;
-	pointaux=p->vertexes[i];
-	p->vertexes[i]=p->vertexes[i+1];
-	p->vertexes[i+1]=pointaux;
-	ban=1;
-      }	
-    }
-  }while(ban);
-  free(angs);			  
 }
 
 
@@ -99,14 +48,10 @@ struct brush *loadbrush(struct rawbrush *b)
 	struct brush *aux;
 	struct plane *planes;
 	struct line lineaux;
-	struct vector pointaux,pointaux2,p1,p2,centro;
+	struct vector pointaux;
 	int maxvert;
 	int i,j,k,c;
-	double res,gdot;
 
-	int ban,gg;	
-	double ga;
-	int gp1,gp2;
 	static int cent=0;
 	
 	cent++;

@@ -105,6 +105,7 @@ struct poly getsilhouette(struct brush *bsh,int axis);
 struct rect getrect(struct aabb box,int axis);
 int interaabbbrush(struct aabb box,struct brush *bsh,struct aabb bb,struct poly *silh);
 int polysadj(struct poly p1,struct poly p2,struct vector *v1,struct vector *v2);
+void ordervertexes(struct poly *p);
 
 
 #endif

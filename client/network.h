@@ -12,4 +12,4 @@ void send_txt();
 void send_name();
 int network(void *data);
 void ini_network();
-int end_network();
+void end_network();

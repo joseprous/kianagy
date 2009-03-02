@@ -1,7 +1,7 @@
 #include "client.h"
 
 #include <getopt.h>
-
+#include <time.h>
 #include "font.h"
 #include "network.h"
 #include "players.h"
@@ -504,7 +504,7 @@ struct brush getviewfrustum()
 
 void display(void)
 {
-	int i,j;
+
 	struct player *aux;
 	glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -563,7 +563,7 @@ void display(void)
 
 void rotcam(float angulo,float z)
 {
-	int b=1;
+
 	cam_ang = (int)(cam_ang + angulo+360)%360;
 	cam_x=-cos(PI*(-cam_ang)/180)*(cam_dist);
 	cam_y=-sin(PI*(-cam_ang)/180)*(cam_dist);	
@@ -607,7 +607,7 @@ void uso()
 int main(int argc, char** argv)
 {
 
-	int kban=1;
+
 	const char* const short_options =  "fh:w:s:n:m:t:"; 
 	const struct option long_options[] = { 
 		{"width" , 1, NULL,  'w'},
@@ -622,7 +622,7 @@ int main(int argc, char** argv)
 
 	int opcion; 
 	
-	Uint32 gticks,gticks2;
+	Uint32 gticks2;
 	int fps=0;
 	
 	srand(time(0));

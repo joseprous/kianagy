@@ -28,7 +28,7 @@ void printpoly(struct poly p)
 
 void printbrush(struct brush *bsh)
 {
-  int i,j;
+  int i;
   printf("BRUSH:\n");
   for(i=0;i<bsh->num;i++){
     printpoly(bsh->polys[i]);
@@ -106,7 +106,7 @@ struct loctree *_loadloctree(struct map *m,struct aabb box,float size,int depth)
 {
   struct loctree *aux;
   struct vector mid;//punto medio de la caja
-  struct aabb boxes[8],box2;
+  struct aabb boxes[8];
   double sizex,sizey,sizez,dx,dy,dz;
   int i;
   if(depth<0){
