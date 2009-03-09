@@ -271,22 +271,27 @@ void __drawloctree(struct loctree *m,int mode,struct brush *vf,struct aabb vfbb,
   int i;
   struct brushlist *bl;
   if(!m)return;
-  if(!interaabbbrush(m->box,vf,vfbb,silh))return; 
-  if(mode==WIREFRAME && m->gllistw){
-    glCallList(m->gllistw);
-    for(i=0;i<8;i++){
-      __drawloctree(m->hijos[i],mode,vf,vfbb,silh);
+  if(mode==FLAT){
+    m->draw=0;
+    if(!interaabbbrush(m->box,vf,vfbb,silh))return;
+    m->draw=1;
+    if(m->gllistf){
+      glCallList(m->gllistf);
+      for(i=0;i<8;i++){
+	__drawloctree(m->hijos[i],mode,vf,vfbb,silh);
+      }
+      return;
     }
-    return;
-  }
-  if(mode==FLAT && m->gllistf){
-    glCallList(m->gllistf);
-    for(i=0;i<8;i++){
-      __drawloctree(m->hijos[i],mode,vf,vfbb,silh);
+  }else{//mode==WIREFRAME
+    if(m->draw==0)return;
+    if(m->gllistw){
+      glCallList(m->gllistw);
+      for(i=0;i<8;i++){
+	__drawloctree(m->hijos[i],mode,vf,vfbb,silh);
+      }
+      return;
     }
-    return;
-  }
-  
+  }  
   bl=m->brushes;
   while(bl){
     drawbrush(bl->bsh,mode);
@@ -326,8 +331,8 @@ void _drawloctree(struct loctree *m,int mode)
     glLineWidth(3);
     glColor3f(0,0,0);
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-  }
-  if(mode==FLAT){
+  }else{
+  //if(mode==FLAT){
     glEnable (GL_TEXTURE_1D);									
     glBindTexture (GL_TEXTURE_1D, shaderTexture[0]);			
     glColor3f (0.5f, 0.5f, 0.5f);	
@@ -341,8 +346,8 @@ void _drawloctree(struct loctree *m,int mode)
   if(mode==WIREFRAME){
     glLineWidth(1);
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-  }
-  if(mode==FLAT){	
+  }else{
+    //if(mode==FLAT){	
     glDisable (GL_TEXTURE_1D);
   }
   if(banvf){

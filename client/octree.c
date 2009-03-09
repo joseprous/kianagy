@@ -207,6 +207,12 @@ struct loctree *loadloctree(struct map *m,float size,int maxdepth)
   return _loadloctree(m,getmaxbox(m),size,maxdepth);
 }
 
+/*struct loctree *loadroctree(struct map *m,float size,int maxdepth)
+{
+  return _loadloctree(m,getmaxbox(m),size,maxdepth);
+  }*/
+
+
 void _loctreestats(struct loctree *m, int level)
 {
   int i,c;

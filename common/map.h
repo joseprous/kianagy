@@ -9,7 +9,7 @@ struct rawbrush{
 };
 
 struct brushlist{
-  int used;//para crear los arboles
+  unsigned long int used;//para crear los arboles
 	struct rawbrush *rbsh;
 	struct brush	*bsh;
 	struct brushlist *next;

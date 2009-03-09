@@ -296,12 +296,12 @@ struct vector getpvertex(struct aabb box,struct plane p)
     aux.z=box.max.z;
     return aux;
   }
-  if(p.normal.x<=0 && p.normal.y>=0 && p.normal.z<=0){
+  //if(p.normal.x<=0 && p.normal.y>=0 && p.normal.z<=0){
     aux.x=box.min.x;
     aux.y=box.max.y;
     aux.z=box.min.z;
     return aux;
-  }
+    //}
 }
 struct vector getnvertex(struct aabb box,struct plane p)
 {
@@ -338,12 +338,12 @@ struct vector getnvertex(struct aabb box,struct plane p)
     aux.z=box.max.z;
     return aux;
   }
-  if(p.normal.x>=0 && p.normal.y<=0 && p.normal.z>=0){
+  //  if(p.normal.x>=0 && p.normal.y<=0 && p.normal.z>=0){
     aux.x=box.min.x;
     aux.y=box.max.y;
     aux.z=box.min.z;
     return aux;
-  }
+    //}
 }
 
 /*
@@ -371,11 +371,11 @@ struct vector2d getpvertex2d(struct rect r,struct line2d l)
     aux.y=r.min.y;
     return aux;
   }
-  if(l.normal.x<=0 && l.normal.y>=0){
+  //if(l.normal.x<=0 && l.normal.y>=0){
     aux.x=r.min.x;
     aux.y=r.max.y;
     return aux;
-  }
+    //}
 }
 
 struct vector2d getnvertex2d(struct rect r,struct line2d l)
@@ -388,11 +388,11 @@ struct vector2d getnvertex2d(struct rect r,struct line2d l)
     aux.y=r.min.y;
     return aux;
   }
-  if(l.normal.x>=0 && l.normal.y<=0){
+  //if(l.normal.x>=0 && l.normal.y<=0){
     aux.x=r.min.x;
     aux.y=r.max.y;
     return aux;
-  }
+    //}
 }
 /*
   0 si intersecta
@@ -711,7 +711,7 @@ int interaabbbrush(struct aabb box,struct brush *bsh,struct aabb bb,struct poly 
   if(!interaabbaabb(box,bb))return 0;
 
   for(i=0;i<bsh->num;i++){
-    p=planepnormal(bsh->polys[i].vertexes[0],bsh->polys[i].normal);
+    p=planepnormal(bsh->polys[i].vertexes[0],bsh->polys[i].normal);//posible precalcular
     if(interaabbplane(box,p)==1)return 0;
   }
   for(i=0;i<3;i++){
