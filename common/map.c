@@ -60,6 +60,8 @@ struct brush *loadbrush(struct rawbrush *b)
 	aux=malloc(sizeof(struct brush));
 	//printf("1\n");
 	
+	aux->draw=0;
+
 	aux->num=b->num;
 	aux->polys=malloc(sizeof(struct poly)*b->num);
 	//printf("2\n");

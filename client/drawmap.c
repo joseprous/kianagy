@@ -111,9 +111,16 @@ void drawpoly(struct poly p,int mode)
 			TmpVector=normalize (TmpVector);
 			TmpShade = dot (TmpVector, lightAngle);
 			if (TmpShade < 0.0f) TmpShade = 0.0f;
-			glBegin(GL_POLYGON);
+			/*glBegin(GL_POLYGON);
 				glTexCoord1f (TmpShade);
 				glNormal3f(p.normal.x,p.normal.y,p.normal.z);
+				for(i=0;i<p.num;i++){
+					glVertex3f(p.vertexes[i].x,p.vertexes[i].y, p.vertexes[i].z);		
+				}
+				glEnd();*/	
+			glBegin(GL_TRIANGLE_FAN);
+				glTexCoord1f (TmpShade);
+				glNormal3f(p.normal.x,p.normal.y,p.normal.z);				
 				for(i=0;i<p.num;i++){
 					glVertex3f(p.vertexes[i].x,p.vertexes[i].y, p.vertexes[i].z);		
 				}
@@ -198,7 +205,7 @@ void drawpoly(struct poly p,int mode)
 			glEnable( GL_TEXTURE_1D );			
 		}
 	}else{
-		glBegin(GL_POLYGON);
+		glBegin(GL_TRIANGLE_FAN);
 		glNormal3f(p.normal.x,p.normal.y,p.normal.z);
 		for(i=0;i<p.num;i++){
 			 glVertex3f(p.vertexes[i].x,p.vertexes[i].y, p.vertexes[i].z);		
@@ -386,6 +393,96 @@ void drawloctree(struct loctree *m)
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);		
     glDepthFunc (GL_LEQUAL);	
     _drawloctree(m,WIREFRAME);
+    glDisable (GL_BLEND);	
+    glDepthFunc (GL_LESS);
+    glCullFace(GL_BACK);	
+  glPopMatrix();		  
+}
+
+/*###############################################################################*/
+
+void __drawroctree(struct roctree *m,int mode,struct brush *vf,struct aabb vfbb,struct poly *silh,unsigned long int pass)
+{
+  int i;
+  struct brushlist *bl;
+  //printf("wtf\n");
+  if(!m)return;
+  if(mode==FLAT){
+    m->draw=0;
+    if(!interaabbbrush(m->box,vf,vfbb,silh))return;
+    m->draw=1;
+  }else{//mode==WIREFRAME
+    if(m->draw==0)return;
+  }
+  //printf("1\n");
+  bl=m->brushes;
+  //printf("2\n");
+  while(bl){
+    //printf("%ld %ld\n",bl->bsh->draw,pass);
+    //printf("3\n");
+    if(bl->bsh->draw<pass){
+      //printf("4\n");
+      drawbrush(bl->bsh,mode);
+      //bl->bsh->draw=pass;
+    }
+    //printf("5\n");
+    bl=bl->next;
+  }
+  for(i=0;i<8;i++){
+    __drawroctree(m->hijos[i],mode,vf,vfbb,silh,pass);
+  }  
+}
+
+void _drawroctree(struct roctree *m,int mode)
+{
+  struct brush vf; //view frustum
+  struct aabb vfbb;//view frustum bounding box
+  int i;
+  struct poly silh[3];
+  static unsigned long int pass=0;
+  vf=getviewfrustum();	
+  if(mode==WIREFRAME){
+    glLineWidth(3);
+    glColor3f(0,0,0);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+  }else{
+    glEnable (GL_TEXTURE_1D);									
+    glBindTexture (GL_TEXTURE_1D, shaderTexture[0]);			
+    glColor3f (0.5f, 0.5f, 0.5f);	
+  }
+  vfbb=getaabb(&vf);
+  for(i=0;i<3;i++){
+    silh[i]=getsilhouette(&vf,i);
+  }
+  pass++;
+  __drawroctree(m,mode,&vf,vfbb,silh,pass);
+  for(i=0;i<3;i++)free(silh[i].vertexes);
+  if(mode==WIREFRAME){
+    glLineWidth(1);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+  }else{
+    glDisable (GL_TEXTURE_1D);
+  }
+  if(banvf){
+    freebrush(&vf);
+  }else{
+    gvf=vf;
+    banvf=1;
+  }
+}
+
+void drawroctree(struct roctree *m)
+{ 
+
+  glPushMatrix();		
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
+    _drawroctree(m,FLAT);
+    glCullFace(GL_FRONT);
+    glEnable (GL_BLEND);									
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);		
+    glDepthFunc (GL_LEQUAL);	
+    _drawroctree(m,WIREFRAME);
     glDisable (GL_BLEND);	
     glDepthFunc (GL_LESS);
     glCullFace(GL_BACK);	

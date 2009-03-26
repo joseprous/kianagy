@@ -101,25 +101,45 @@ struct brushlist *getbrushes(struct map *m,struct aabb box)
   return bl;  
 }
 
-
-struct loctree *_loadloctree(struct map *m,struct aabb box,float size,int depth)
+/*
+  retorna la lista de brushes que tocan al box
+*/
+struct brushlist *getbrushespartial(struct map *m,struct aabb box)
 {
-  struct loctree *aux;
-  struct vector mid;//punto medio de la caja
-  struct aabb boxes[8];
-  double sizex,sizey,sizez,dx,dy,dz;
+  struct entitylist *pe;
+  struct brushlist *pb,*bl=NULL,*aux=NULL;
+  struct aabb bb;
+  struct poly silh[3];
   int i;
-  if(depth<0){
-    return NULL;
+
+  pe=m->entities;
+  while(pe){
+    pb=pe->ent.brushes;
+    while(pb){
+      bb=getaabb(pb->bsh);
+      for(i=0;i<3;i++){
+	silh[i]=getsilhouette(pb->bsh,i);
+      }
+      if(interaabbbrush(box,pb->bsh,bb,silh)){
+	aux=malloc(sizeof(struct brushlist));
+	aux->next=bl;
+	aux->bsh=pb->bsh;
+	aux->rbsh=pb->rbsh;
+	bl=aux;
+	pb->used=1;
+      }
+      pb=pb->next;
+    }
+    pe=pe->next;
   }
-
-  aux=malloc(sizeof(struct loctree));
-  //aux->box=box;
-  
-  aux->gllistf=0;
-  aux->gllistw=0;
+  return bl;  
+}
 
 
+void getboxes(struct aabb *boxes,struct aabb box)
+{
+  int i;
+  struct vector mid;//punto medio de la caja
   mid.x=(box.min.x+box.max.x)/2;
   mid.y=(box.min.y+box.max.y)/2;
   mid.z=(box.min.z+box.max.z)/2;
@@ -159,31 +179,55 @@ struct loctree *_loadloctree(struct map *m,struct aabb box,float size,int depth)
     boxes[i+4].max.x=boxes[i].max.x;
     boxes[i+4].max.y=boxes[i].max.y+(mid.y-box.min.y);
     boxes[i+4].max.z=boxes[i].max.z;
-  }
-
+  }  
   /*  for(i=0;i<8;i++){
     if(!checkaabb(boxes[i]))printf("ERROR: los puntos de un aabb estan mal!!\n");
     } */
+
+}
+
+
+struct loctree *_loadloctree(struct map *m,struct aabb box,float size,int depth)
+{
+  struct loctree *aux;
+  struct aabb boxes[8];
+  double sizex,sizey,sizez,dx,dy,dz;
+  int i;
+  if(depth<0){
+    return NULL;
+  }
+
+  aux=malloc(sizeof(struct loctree));
+  //aux->box=box;
+  
+  aux->gllistf=0;
+  aux->gllistw=0;
+
+  getboxes(boxes,box);
   
   for(i=0;i<8;i++){
     aux->hijos[i]=_loadloctree(m,boxes[i],size,depth-1);
   }
-
+  
+  /*ajusta el tamanho de la caja de acuerdo a size*/
   sizex=box.max.x-box.min.x;
   sizey=box.max.y-box.min.y;
   sizez=box.max.z-box.min.z;
   dx=sizex*size;
   dy=sizey*size;
   dz=sizez*size;
-
   aux->box.min.x=box.min.x-dx;
   aux->box.min.y=box.min.y-dy;
   aux->box.min.z=box.min.z-dz;
   aux->box.max.x=box.max.x+dx;
   aux->box.max.y=box.max.y+dy;
   aux->box.max.z=box.max.z+dz;    
-
+  
   aux->brushes=getbrushes(m,aux->box);
+  
+  /*si no hay brushes en el nodo actual
+    ni en los hijos liberar memoria y retornar NULL
+   */
   if(aux->brushes==NULL){
     int b=0;
     for(i=0;i<8;i++){
@@ -207,11 +251,54 @@ struct loctree *loadloctree(struct map *m,float size,int maxdepth)
   return _loadloctree(m,getmaxbox(m),size,maxdepth);
 }
 
-/*struct loctree *loadroctree(struct map *m,float size,int maxdepth)
-{
-  return _loadloctree(m,getmaxbox(m),size,maxdepth);
-  }*/
 
+struct roctree *_loadroctree(struct map *m,struct aabb box,int depth)
+{
+  struct roctree *aux;
+  struct vector mid;//punto medio de la caja
+  struct aabb boxes[8];
+  double sizex,sizey,sizez,dx,dy,dz;
+  int i;
+  int b=0;
+
+  aux=malloc(sizeof(struct roctree));
+  aux->box=box;
+  
+  if(depth==0){
+    aux->brushes=getbrushespartial(m,aux->box);
+    if(aux->brushes==NULL){
+      free(aux);
+      return NULL;      
+    }
+    for(i=0;i<8;i++){
+      aux->hijos[i]=NULL;
+    }    
+    return aux;
+  }
+  aux->brushes=NULL;
+
+  getboxes(boxes,box);
+  
+  for(i=0;i<8;i++){
+    if(aux->hijos[i]=_loadroctree(m,boxes[i],depth-1)){
+      b=1;
+    }
+  }
+
+  if(!b){
+    free(aux);
+    return NULL;
+  }
+
+  return aux;
+}
+
+
+
+struct roctree *loadroctree(struct map *m,int maxdepth)
+{
+  return _loadroctree(m,getmaxbox(m),maxdepth);
+}
 
 void _loctreestats(struct loctree *m, int level)
 {
@@ -238,6 +325,36 @@ void loctreestats(struct loctree *m)
 {
   _loctreestats(m,0);
 }
+
+void _roctreestats(struct roctree *m, int level)
+{
+  int i,c;
+  struct brushlist *bl;
+  if(m==NULL)return;
+  c=0;
+  bl=m->brushes;
+  while(bl){
+    c++;
+    bl=bl->next;
+  }
+  for(i=0;i<level;i++)printf("-");
+  printf("num brushes:%d\n",c);
+  for(i=0;i<8;i++){
+    _roctreestats(m->hijos[i],level+1);
+  }
+}
+
+/*
+  imprime un arbol con la cantidad de brushes por nodo
+*/
+void roctreestats(struct roctree *m)
+{
+  _roctreestats(m,0);
+}
+
+
+
+
 
 /*
   genera listas de opengl para los bruhes de los nodos

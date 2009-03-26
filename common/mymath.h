@@ -57,13 +57,15 @@ struct points{
 };
 
 struct poly{
-	int num;
-	struct vector *vertexes;
-	struct vector normal;
-	struct texture tex;
+  int num;
+  struct vector *vertexes;
+  struct vector center;
+  struct vector normal;
+  struct texture tex;
 };
 
 struct brush{
+  unsigned long int draw;
   int num;
   struct poly *polys;
 };

@@ -198,18 +198,23 @@ int yywrap()
 {
 	return 1;
 } 
-
+extern FILE *yyin;
 int parsemap(char *file)
 {	
-	int fd_in,gfd;
-	fd_in=open(file, O_RDONLY);
-	dup2( STDIN_FILENO , gfd);
-	dup2( fd_in, STDIN_FILENO );
+  //int fd_in,gfd;
+	  //fd_in=open(file, O_RDONLY);
+	  //if(dup2( STDIN_FILENO , gfd)==-1)return 0;
+	  //if(dup2( fd_in, STDIN_FILENO )==-1)return 0;
+	//if(dup2( gfd, STDIN_FILENO )==-1)return 0;
+	//close(fd_in);
+	
+        FILE *input;
+	input=fopen(file,"r");
+	yyin=input;
 
 	yyparse();
 
-	dup2( gfd, STDIN_FILENO );
-	close(fd_in);
+	fclose(input);
 
 	if(!cerrores){
 		return 1;

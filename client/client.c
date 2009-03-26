@@ -41,6 +41,8 @@ struct player *players;
 struct player *pj;
 
 struct loctree *tree;
+struct roctree *tree2;
+
 
 double curent_time = 0;
 double last_time = 0;
@@ -231,7 +233,7 @@ void init(void)
 	fov=60;
 	ratio=WIDTH/HEIGHT;
 	nearDist=1.5;
-	farDist=3000;
+	farDist=2000;
 
 	gluPerspective(fov, ratio, nearDist, farDist);
 	//gluPerspective(60,WIDTH/HEIGHT,1.5,10000);
@@ -525,8 +527,10 @@ void display(void)
 		}
 				
 		//		glCallList(map_list);
+		
 		drawloctree (tree);
-
+		
+		//drawroctree (tree2);
 		
 	//	if(bala.active)drawbullet(&bala);
 		
@@ -675,21 +679,34 @@ int main(int argc, char** argv)
 		strcpy(myname,"nombre");
 	}
 	
+	printf("llego 1");
 	init_sdl();
 	
+	printf("llego 2");
 	init();
 	
+	printf("llego 3");
 	ini_network();
 
+	printf("llego 4");
 	if(!parsemap(smap))return 0;
 	
-	printf("cargando loose octree...\n");
-	tree=loadloctree(currentmap,0.25,5);
-	printf("loose octree cargado\n");
+	printf("llego 5");
 
-	loctreegenlists(tree,2);
+	printf("cargando loose octree...\n");
+	tree=loadloctree(currentmap,0.25,3);
+	printf("loose octree cargado\n");
 	
-	loctreestats(tree);
+
+	/*printf("cargando roctree...\n");
+	tree2=loadroctree(currentmap,3);
+	printf("roctree cargado\n");
+	*/
+	//roctreestats(tree2);
+	
+	//	loctreegenlists(tree,2);
+	
+	//loctreestats(tree);
 
 	/*	map_list=glGenLists(1);
 	glNewList(map_list, GL_COMPILE);

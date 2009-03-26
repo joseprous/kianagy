@@ -608,6 +608,8 @@ void ordervertexes(struct poly *p)
   centro.x/=p->num;
   centro.y/=p->num;
   centro.z/=p->num;
+
+  p->center=centro;
 		
   p1=difvectors(p->vertexes[0],centro);
   for(i=1;i<p->num;i++){			
