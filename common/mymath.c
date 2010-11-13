@@ -64,13 +64,13 @@ int inter2planes(struct plane p1, struct plane p2, struct line *l1)
     n1normsqr = dot(p1.normal, p1.normal);
     n2normsqr = dot(p2.normal, p2.normal);
     a = (s2 * n1n2dot - s1 * n2normsqr) / (n1n2dot*n1n2dot - n1normsqr * n2normsqr);
-	b = (s1 * n1n2dot - s2 * n1normsqr) / (n1n2dot*n1n2dot - n1normsqr * n2normsqr);
+    b = (s1 * n1n2dot - s2 * n1normsqr) / (n1n2dot*n1n2dot - n1normsqr * n2normsqr);
 	
-	l1->point=sumvectors(mulvector(a,p1.normal),mulvector(b,p2.normal));
+    l1->point=sumvectors(mulvector(a,p1.normal),mulvector(b,p2.normal));
     //l1.point = a * p1.normal + b * p2.normal;
 	
 	
-	l1->point=mulvector(-1.0,l1->point);
+    l1->point=mulvector(-1.0,l1->point);
 	
     return 1;
 }

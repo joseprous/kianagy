@@ -6,4 +6,4 @@ lex.yy.c
 y.tab.c
 y.tab.h
 TAGS
-
+build/botlib.log
