@@ -153,11 +153,9 @@ int handle_events()
 							//down
 							break;
 						case SDLK_1:
-							createbullet();
 							send_msg2(ATTACK,"0");
 							break;
 						case SDLK_2:
-							createbullet();
 							send_msg2(ATTACK,"1");
 							break;							
 						case SDLK_f:

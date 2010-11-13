@@ -17,19 +17,6 @@ int numpl;
 int fullscreen=0;
 SDL_mutex *mutex;
 
-struct bullet
-{
-	struct vector p0;	
-	struct vector pos;
-	struct vector vel;
-	GLuint tex;
-	int t0,tf;
-	int active;
-	int ang;
-};
-
-struct bullet bala;
-
 typedef struct tagMATRIX // A Structure To Hold An OpenGL Matrix ( NEW )
 {
 	float Data[16];// We Use [16] Due To OpenGL's Matrix Format ( NEW )
@@ -39,10 +26,6 @@ MATRIX;
 struct player *players;
 
 struct player *pj;
-
-struct loctree *tree;
-struct roctree *tree2;
-
 
 double curent_time = 0;
 double last_time = 0;
@@ -81,11 +64,8 @@ struct texlist *findtex(char *name)
 {
 	struct texlist *aux;
 	aux=textures;
-	//printf("0 %s\n",name);
 	while(aux){
-		//printf("1 %s %s\n",aux->name,name);
 		if(!strcmp(aux->name,name)){
-			//printf("2 %s %s\n",aux->name,name);
 			return aux;	
 		}
 		aux=aux->next;				
@@ -99,11 +79,8 @@ GLuint loadtex2(char *name)
 	GLint  nOfColors;
 	char aux[255];
 	struct texlist *gtex;
-	//printf("entro %s\n",name);
 	gtex=findtex(name);
-	//printf("1) %s %p\n",name,gtex);
 	if(gtex){
-		//printf("salio %s %d\n",gtex->name,gtex->gltex);
 		return gtex->gltex;
 	}
 	
@@ -236,16 +213,10 @@ void init(void)
 	farDist=2000;
 
 	gluPerspective(fov, ratio, nearDist, farDist);
-	//gluPerspective(60,WIDTH/HEIGHT,1.5,10000);
 	glMatrixMode(GL_MODELVIEW);
 	glClearColor(1, 1, 1, 0.0);
-	//glClearColor(0.0, 0.0, 0.5, 0.0);
-	//glShadeModel(GL_SMOOTH);	
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	
-	//glEnable(GL_BLEND);
-	//glEnable(GL_LINE_SMOOTH);
 	
 	cam_x=-100;
 	cam_y=0;
@@ -267,7 +238,6 @@ void init(void)
 	pj->n=0;
 	pj->weapon=rand()%12;
 	pj_ang=0;
-	//ini_light();
 	cam_dist=100;
 	cam_ang=0;
 	
@@ -281,123 +251,12 @@ void init(void)
 		
 }
 
-
-
-void billboardCheatSphericalBegin() 
-{
-	
-	float modelview[16];
-	int i,j;
-
-	// save the current modelview matrix
-	glPushMatrix();
-
-	// get the current modelview matrix
-	glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
-
-	// undo all rotations
-	// beware all scaling is lost as well 
-	for( i=0; i<3; i++ ) 
-	    for( j=0; j<3; j++ ) {
-		if ( i==j )
-		    modelview[i*4+j] = 1.0;
-		else
-		    modelview[i*4+j] = 0.0;
-	    }
-
-	// set the modelview with no rotations
-	glLoadMatrixf(modelview);
-}
-
-void billboardEnd() 
-{
-	// restore the previously 
-	// stored modelview matrix
-	glPopMatrix();
-}
-
-void createbullet()
-{
-	bala.p0.x=pj->x;
-	bala.p0.y=pj->y;
-	bala.p0.z=pj->z+25;
-
-/*	cam_ang = (int)(cam_ang + angulo+360)%360;
-	cam_x=-cos(PI*(-cam_ang)/180)*(cam_dist);
-	cam_y=-sin(PI*(-cam_ang)/180)*(cam_dist);	
-	cam_z+=z;
-	*/
-
-	bala.vel.x=cos(PI*(-pj_ang)/180);
-	bala.vel.y=sin(PI*(-pj_ang)/180);
-	bala.vel.z=0;
-	
-	
-	bala.active=1;
-	bala.t0=SDL_GetTicks();
-	bala.tf=bala.t0+5000;
-	bala.tex=loadtex2("bala.png");
-	bala.ang=0;
-}
-
-void drawbullet(struct bullet *b)
-{
-	int t;
-	struct vector v0t;
-	t=SDL_GetTicks();
-	if(t>b->tf){
-		b->active=0;
-		//return;
-	}
-	v0t=mulvector((t-b->t0),b->vel);	
-	b->pos=sumvectors(b->p0,v0t);
-	
-	b->ang=(b->ang+50)%360;
-	
-	glPushMatrix();
-		glTranslatef(b->pos.x,b->pos.y,b->pos.z);
-		//glTranslatef(pj->x+25,pj->y,pj->z+50);
-		glDisable( GL_TEXTURE_1D );
-		glEnable( GL_TEXTURE_2D ); 
-		glEnable(GL_BLEND);
-		glDepthMask(GL_FALSE);
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		//balatex=loadtex2("bala.png");
-		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-		glBindTexture( GL_TEXTURE_2D, b->tex );	
-		billboardCheatSphericalBegin();
-			glRotatef(90,0,1,0);
-			glRotatef(b->ang,1,0,0);
-			glColor3f(0,0,0);
-			glFrontFace(GL_CCW);
-			glBegin(GL_POLYGON);
-				glTexCoord2f(0,0);
-				glVertex3f(0,-16,-16);
-				glTexCoord2f(0,1);
-				glVertex3f(0,-16,16);
-				glTexCoord2f(1,1);
-				glVertex3f(0,16,16);
-				glTexCoord2f(1,0);
-				glVertex3f(0,16,-16);		
-			glEnd();
-		billboardEnd();	
-		glDepthMask(GL_TRUE);
-		glDisable(GL_BLEND);
-		glDisable( GL_TEXTURE_2D );
-		glEnable( GL_TEXTURE_1D ); 			
-	glPopMatrix();		
-}
-
 struct brush getviewfrustum()
 {
   struct brush aux;
   int i;
   struct vector vr,vp,vl,vu,vc,p1,p2;
   double hnear,wnear,hfar,wfar;
-  //gluPerspective(fov, ratio, nearDist, farDist);
-  //gluLookAt(px,py,pz, lx,ly,lz, ux,uy,uz)
-
-  //gluLookAt(pj->x+cam_x, pj->y+cam_y, pj->z+cam_z, pj->x, pj->y, pj->z, 0.0, 0.0, 1.0);
 
   vp.x=pj->x+cam_x;
   vp.y=pj->y+cam_y;
@@ -410,24 +269,11 @@ struct brush getviewfrustum()
   vu.z=1;
   
   vr=normalize(difvectors(vl,vp));
-
-  /*  px=pj->x+cam_x;
-  py=pj->y+cam_y;
-  pz=pj->z+cam_z;
-  */
   
   hnear = 2 * tan((fov*(PI/180)) / 2) * nearDist;
   wnear = hnear * ratio;
   hfar = 2 * tan((fov*(PI/180)) / 2) * farDist;
   wfar = hfar * ratio;
-
-  
-  /*  printf("vp:");printvector(vp);
-  printf("\nvl:");printvector(vl);
-  printf("\nvu:");printvector(vu);
-  printf("\nvp:");printvector(vr);
-  printf("hnear:%lf\nwnear:%lf\nhfar:%lf\nwfar:%lf\n",hnear,wnear,hfar,wfar);
-  */
 
   aux.num=6;
   aux.polys=malloc(sizeof(struct poly)*aux.num);
@@ -436,8 +282,7 @@ struct brush getviewfrustum()
     aux.polys[i].vertexes=malloc(sizeof(struct vector)*4);
     aux.polys[i].tex.name=0;
   }
-  //near plane
-  //(hn/2)*vu+(wn/2)*vu+vp+nearDist*vr;
+
   vc=sumvectors(vp,mulvector(nearDist,vr));
   p1=mulvector(wnear/2,normalize(cross(vu,vr)));
   p2=mulvector(hnear/2,normalize(cross(p1,vr)));
@@ -457,19 +302,7 @@ struct brush getviewfrustum()
   aux.polys[1].vertexes[2]=sumvectors(vc,sumvectors(mulvector(-1,p1),mulvector(-1,p2)));
   aux.polys[1].vertexes[3]=sumvectors(vc,sumvectors(p1,mulvector(-1,p2)));
   aux.polys[1].normal=vr;
-  
-
-  /*  printpoly(aux.polys[1]);
-
-  printf("vp:");printvector(vp);
-  printf("\nvc:");printvector(vc);
-  printf("\nvr:");printvector(vr);
-  printf("\nvl:");printvector(vl);
-  printf("\nfov:%lf\nratio:%lf\nnearDist:%lf\nfarDist:%lf\n",fov, ratio, nearDist, farDist);
-  printf("\nhnear:%lf\nwnear%lf\nhfar:%lf\nwfar:%lf\n",hnear,wnear,hfar,wfar);
-  printf("\n\n");
-  */
-  
+    
   aux.polys[2].vertexes[0]=aux.polys[0].vertexes[0];
   aux.polys[2].vertexes[1]=aux.polys[1].vertexes[0];
   aux.polys[2].vertexes[2]=aux.polys[1].vertexes[3];
@@ -499,7 +332,6 @@ struct brush getviewfrustum()
 			    difvectors(aux.polys[5].vertexes[1],aux.polys[5].vertexes[0]));
   
   //printbrush(&aux);
-  //exit(0);
   return aux;
 }
 
@@ -526,14 +358,8 @@ void display(void)
 			aux=aux->next;		
 		}
 				
-		//		glCallList(map_list);
-		
-		drawloctree (tree);
-		
-		//drawroctree (tree2);
-		
-	//	if(bala.active)drawbullet(&bala);
-		
+		glCallList(map_list);
+				
 		if(escribiendo){
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
@@ -679,41 +505,19 @@ int main(int argc, char** argv)
 		strcpy(myname,"nombre");
 	}
 	
-	printf("llego 1");
 	init_sdl();
 	
-	printf("llego 2");
 	init();
 	
-	printf("llego 3");
 	ini_network();
 
-	printf("llego 4");
 	if(!parsemap(smap))return 0;
 	
-	printf("llego 5");
-
-	printf("cargando loose octree...\n");
-	tree=loadloctree(currentmap,0.25,3);
-	printf("loose octree cargado\n");
-	
-
-	/*printf("cargando roctree...\n");
-	tree2=loadroctree(currentmap,3);
-	printf("roctree cargado\n");
-	*/
-	//roctreestats(tree2);
-	
-	//	loctreegenlists(tree,2);
-	
-	//loctreestats(tree);
-
-	/*	map_list=glGenLists(1);
+	map_list=glGenLists(1);
 	glNewList(map_list, GL_COMPILE);
-	   //_drawmap(currentmap);	
-	   drawloctree (tree);
+	   _drawmap(currentmap);	
 	glEndList();
-	*/
+	
 	
 	if(!parsemap(stmap))return 0;
 
